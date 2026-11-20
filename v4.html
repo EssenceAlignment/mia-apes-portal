@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mia's APES Mastery Engine v4 — Video + Brain Dump + Interactive Graphs + Teach Mom + Real AP Exam</title>
+<style>
+  :root {
+    --bg: #0b1120; --panel: #111827; --card: #1e293b; --border: #334155;
+    --text: #f8fafc; --muted: #94a3b8;
+    --emerald: #10b981; --sky: #38bdf8; --amber: #f59e0b; --rose: #f43f5e; --violet: #a855f7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 20px;
+    background: radial-gradient(circle at top right, #1e293b 0%, #0b1120 70%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    line-height: 1.5;
+  }
+  .hero {
+    background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(168,85,247,0.18));
+    border: 1px solid rgba(56,189,248,0.45);
+    border-radius: 16px; padding: 18px 24px; margin-bottom: 18px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .hero h1 { margin: 0 0 4px; font-size: 22px; }
+  .hero p { margin: 0; color: #cbd5e1; font-size: 13.5px; }
+  .score-badge {
+    background: #0f172a; border: 1px solid var(--emerald);
+    padding: 10px 16px; border-radius: 12px; text-align: right;
+  }
+  .score-badge .big { font-size: 17px; font-weight: 800; color: var(--emerald); }
+  .score-badge .small { font-size: 11.5px; color: var(--muted); }
+
+  .nav-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 15px; border-radius: 10px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--sky); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #0284c7, #7c3aed);
+    border-color: #38bdf8; color: #fff;
+    box-shadow: 0 6px 18px rgba(2,132,199,0.35);
+  }
+
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  .action-btn {
+    background: var(--emerald); color: #052e16; border: none; padding: 9px 15px;
+    border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .action-btn.secondary { background: #334155; color: #f8fafc; }
+  .action-btn.yt { background: #ef4444; color: #fff; }
+
+  /* Step 1: Video + Brain Dump Layout */
+  .bd-layout { display: grid; grid-template-columns: 310px 1fr; gap: 18px; }
+  @media (max-width: 960px) { .bd-layout { grid-template-columns: 1fr; } }
+  .bd-topic-btn {
+    display: block; width: 100%; text-align: left; background: var(--card);
+    border: 1px solid var(--border); color: var(--text); padding: 12px 14px;
+    border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 700; font-size: 13px;
+  }
+  .bd-topic-btn.active { background: #1e1b4b; border-color: var(--sky); color: #bae6fd; }
+  .bd-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+
+  .video-bar {
+    background: #0f172a; border: 1px solid #3b82f6; border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  textarea.bd-input {
+    width: 100%; height: 135px; background: #0f172a; border: 1px solid #475569;
+    border-radius: 10px; color: #fff; padding: 14px; font-size: 14px; font-family: inherit;
+    margin: 10px 0; resize: vertical;
+  }
+  .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .kw-chip {
+    padding: 6px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700;
+    background: #0f172a; border: 1px solid #475569; color: #94a3b8;
+  }
+  .kw-chip.hit { background: rgba(16,185,129,0.2); border-color: var(--emerald); color: #6ee7b7; }
+  .kw-chip.miss { background: rgba(244,63,94,0.18); border-color: var(--rose); color: #fda4af; }
+
+  /* Step 2: Interactive Graph Lab */
+  .graph-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 18px; }
+  .gcard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .svg-stage { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; position: relative; }
+  svg { width: 100%; height: auto; max-height: 260px; }
+  .hotspot-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .spot-btn {
+    background: #1e1b4b; border: 1px dashed var(--violet); color: #e9d5ff;
+    padding: 8px 12px; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;
+  }
+  .spot-btn.solved {
+    background: rgba(16,185,129,0.2); border: 1px solid var(--emerald); color: #6ee7b7;
+  }
+
+  /* Step 3: Teach It To Mom Simulator */
+  .mom-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .mom-bubble {
+    background: rgba(56,189,248,0.14); border-left: 4px solid var(--sky);
+    padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: 15px; font-weight: 700; color: #e0f2fe;
+    margin-bottom: 12px;
+  }
+  .stuck-box {
+    display: none; background: rgba(245,158,11,0.14); border-left: 4px solid var(--amber);
+    padding: 12px 16px; border-radius: 0 10px 10px 0; margin-top: 10px; font-size: 13.5px; color: #fef3c7;
+  }
+
+  /* Step 4: Authentic AP Exam Questions */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  .stimulus-box {
+    background: #0f172a; border: 1px solid #334155; border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; font-size: 13px; color: #cbd5e1;
+  }
+  .q-title { font-weight: 700; font-size: 15px; color: #f8fafc; margin-bottom: 8px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left; background: #0f172a;
+    border: 1px solid #334155; color: #e2e8f0; padding: 10px 14px;
+    border-radius: 8px; margin-top: 6px; cursor: pointer; font-size: 13.5px;
+  }
+  .q-opt:hover { border-color: var(--sky); }
+  .hint-btn {
+    background: rgba(168,85,247,0.2); border: 1px solid var(--violet); color: #e9d5ff;
+    padding: 5px 11px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 8px;
+  }
+  .hint-box {
+    display: none; margin-top: 8px; padding: 8px 12px; border-radius: 6px;
+    background: rgba(168,85,247,0.12); color: #fde047; font-size: 12.5px;
+  }
+  .ans-box { display: none; margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 13px; }
+
+  /* V4 Step 1: embedded video, listen-for list, smart grader */
+  .player-wrap { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin: 10px 0 8px; }
+  .player-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .v4-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0; }
+  .ts-btn { background: #0c4a6e; border: 1px solid var(--sky); color: #e0f2fe; border-radius: 999px; padding: 5px 11px; font-size: 12px; font-weight: 800; cursor: pointer; }
+  .ts-btn:hover { background: #075985; }
+  .listen { background: #0f172a; border: 1px dashed var(--sky); border-radius: 10px; padding: 10px 12px; margin: 8px 0 12px; display: none; }
+  .listen li { margin: 5px 0; font-size: 13.5px; color: #e2e8f0; }
+  .src-tag { font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; margin-left: 6px; text-transform: uppercase; }
+  .src-video { background: rgba(56,189,248,.18); color: #7dd3fc; }
+  .src-packet { background: rgba(168,85,247,.2); color: #d8b4fe; }
+  .concept { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; margin: 7px 0; font-size: 13.5px; background: #0b1120; }
+  .concept.hit { border-color: var(--emerald); background: rgba(16,185,129,.12); }
+  .concept.miss { border-color: var(--rose); background: rgba(244,63,94,.10); }
+  .concept .quote { color: #94a3b8; font-size: 12.5px; margin-top: 4px; font-style: italic; }
+  .meter { height: 12px; background: #1e293b; border-radius: 999px; overflow: hidden; margin: 8px 0 4px; }
+  .meter > div { height: 100%; background: linear-gradient(90deg, #10b981, #38bdf8); width: 0; transition: width .6s; }
+  .fixnote { background: rgba(16,185,129,.12); border: 1px solid var(--emerald); border-radius: 10px; padding: 9px 12px; font-size: 13px; color: #d1fae5; margin-bottom: 12px; }
+  .saved { font-size: 11.5px; color: #64748b; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <h1>Mia's APES Mastery Engine v4 — The Complete 4-Step Loop</h1>
+    <p><b>1. Watch the Video &amp; Brain Dump</b> (video plays right here) → <b>2. Interactive Graph Builder</b> → <b>3. "Teach It to Mom"</b> → <b>4. Real AP Test</b></p>
+  </div>
+  <div class="score-badge">
+    <div class="big" id="live-score">AP Exam Score: 0 / 12</div>
+    <div class="small">Unit 3 practice</div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('step1', this)">Step 1: Watch Video + Brain Dump (Fixed: right videos, smart grading)</button>
+  <button class="tab-btn" onclick="switchTab('step2', this)">Step 2: Interactive Graph Lab (Click to Label the Curves)</button>
+  <button class="tab-btn" onclick="switchTab('step3', this)">Step 3: "Teach It to Mom" Simulator (Fix Your Blind Spots)</button>
+  <button class="tab-btn" onclick="switchTab('step4', this)">Step 4: Real AP Test Scenarios (Hard Exam-Level Questions)</button>
+  <button class="tab-btn" onclick="switchTab('step5', this)">Step 5: "LAX" Wordplay Cards &amp; Packet Key</button>
+</div>
+
+<!-- STEP 1: WATCH VIDEO + BRAIN DUMP (V4: every graded idea comes from the video itself) -->
+<div class="pane active" id="step1">
+  <div class="fixnote"><b>Fixed for Mia (Nov 19):</b> every topic now plays the <b>right</b> video, and the grader only checks ideas the video actually says. Missed one? Tap its time button and the video jumps straight to that moment. Your own words count. Spelling does not.</div>
+  <div class="bd-layout">
+    <div id="bd-topics"></div>
+    <div class="bd-box">
+      <div style="font-size:11px;font-weight:800;color:var(--sky);text-transform:uppercase;">Step 1A: Watch the video</div>
+      <div style="font-size:16px;font-weight:800;color:#fff;margin-top:2px;" id="vid-title"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="vid-sub"></div>
+      <div class="player-wrap"><iframe id="yt" title="Lesson video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div class="v4-row">
+        <button class="action-btn secondary" onclick="toggleListen()">&#128064; What should I listen for?</button>
+        <a id="vid-open" href="#" target="_blank" rel="noopener" class="action-btn secondary">Open on YouTube</a>
+      </div>
+      <ol class="listen" id="listen"></ol>
+
+      <div style="font-size:11px;font-weight:800;color:var(--emerald);text-transform:uppercase;margin-top:8px;">Step 1B: Brain-dump what you remember (your own words are fine)</div>
+      <h2 style="margin:4px 0;font-size:18px;" id="bd-title"></h2>
+      <p style="color:#cbd5e1;font-size:13.5px;margin:6px 0;" id="bd-question"></p>
+      <textarea class="bd-input" id="bd-textarea" oninput="saveDraft()" placeholder="Type everything you remember from the video. Messy is fine. Spelling does not count."></textarea>
+      <div class="v4-row">
+        <button class="action-btn" onclick="gradeBrainDump()">Check My Brain Dump &#10003;</button>
+        <button class="action-btn secondary" onclick="showAllKeywords()">Stuck? Show the model answer</button>
+        <button class="action-btn secondary" onclick="clearBrainDump()">Clear</button>
+        <span class="saved" id="saved"></span>
+      </div>
+      <div id="bd-result" style="margin-top:14px;font-weight:700;font-size:14px;"></div>
+      <div class="meter" id="meter" style="display:none"><div id="meter-fill"></div></div>
+      <div id="bd-chips"></div>
+      <div id="bd-model" style="display:none;margin-top:14px;padding:12px;background:#0f172a;border-left:4px solid var(--emerald);border-radius:6px;font-size:13px;color:#e2e8f0;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2: INTERACTIVE GRAPH LAB (CLICK TO LABEL THE VISUALS) -->
+<div class="pane" id="step2">
+  <div style="background:#111827;border:1px solid var(--border);padding:12px 16px;border-radius:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <div><b>Interactive Visual Lab:</b> Instead of passively looking at graphs, <b>click each purple [ ? ] button below the graph</b> after you guess what belongs in that spot on the curve!</div>
+    <button class="action-btn secondary" onclick="resetGraphs()">Reset All Graph Labels</button>
+  </div>
+
+  <div class="graph-grid">
+    <!-- INTERACTIVE GRAPH 1: J-CURVE, S-CURVE, K, OVERSHOOT, DIE-OFF -->
+    <div class="gcard">
+      <h3 style="margin:0 0 6px;color:var(--sky);">Interactive Graph 1: J-Curve, S-Curve, Overshoot &amp; Die-Off (Fig 19.4)</h3>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">Look at letters <b>[A]</b>, <b>[B]</b>, <b>[C]</b>, <b>[D]</b>, and <b>[E]</b> on the graph. Guess what each one is, then click its button below to lock it onto the graph!</p>
+      <div class="svg-stage">
+        <svg viewBox="0 0 500 230">
+          <line x1="50" y1="195" x2="470" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="50" y1="20" x2="50" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <text x="260" y="218" text-anchor="middle" fill="#cbd5e1" font-size="12">Time →</text>
+          <text x="18" y="110" transform="rotate(-90 18,110)" text-anchor="middle" fill="#cbd5e1" font-size="12">Population Size (N)</text>
+
+          <!-- K Line [B] -->
+          <line x1="50" y1="85" x2="470" y2="85" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,5"/>
+          <text id="g1-B" x="345" y="76" fill="#fbbf24" font-size="12" font-weight="bold">[ B: ? Ceiling Line ]</text>
+
+          <!-- J-Curve [A] -->
+          <path d="M 55 188 Q 145 180 205 25" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+          <text id="g1-A" x="115" y="42" fill="#38bdf8" font-size="12" font-weight="bold">[ A: ? Blue Curve ]</text>
+
+          <!-- S-Curve [E] -->
+          <path d="M 55 188 C 140 180, 170 85, 460 85" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4,3"/>
+          <text id="g1-E" x="345" y="106" fill="#6ee7b7" font-size="11.5" font-weight="bold">[ E: ? Green Curve ]</text>
+
+          <!-- Real Oscillation with Overshoot [C] and Die-off [D] -->
+          <path d="M 55 188 C 130 180, 165 120, 215 42 C 245 18, 265 135, 295 130 C 325 125, 345 65, 385 83" fill="none" stroke="#f43f5e" stroke-width="3"/>
+          <circle cx="225" cy="38" r="5" fill="#f43f5e"/>
+          <text id="g1-C" x="234" y="35" fill="#fda4af" font-size="11.5" font-weight="bold">[ C: ? Peak Above K ]</text>
+
+          <circle cx="285" cy="130" r="5" fill="#f43f5e"/>
+          <text id="g1-D" x="230" y="152" fill="#fda4af" font-size="11.5" font-weight="bold">[ D: ? Crash Below K ]</text>
+        </svg>
+      </div>
+      <div class="hotspot-row">
+        <button class="spot-btn" onclick="solveSpot('g1-A', 'A: J-Curve (Exponential)', this)">Reveal [A]</button>
+        <button class="spot-btn" onclick="solveSpot('g1-B', 'B: Carrying Capacity (K)', this)">Reveal [B]</button>
+        <button class="spot-btn" onclick="solveSpot('g1-C', 'C: OVERSHOOT (Baby Time-Lag)', this)">Reveal [C]</button>
+        <button class="spot-btn" onclick="solveSpot('g1-D', 'D: DIE-OFF (Starvation Crash)', this)">Reveal [D]</button>
+        <button class="spot-btn" onclick="solveSpot('g1-E', 'E: S-Curve (Logistic Growth)', this)">Reveal [E]</button>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE GRAPH 2: SURVIVORSHIP CURVES TYPE I, II, III -->
+    <div class="gcard">
+      <h3 style="margin:0 0 6px;color:var(--emerald);">Interactive Graph 2: Type I, II, III Survivorship Curves &amp; K/r Species</h3>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">Guess which line is <b>Type I (K-selected)</b>, <b>Type II (Constant)</b>, and <b>Type III (r-selected)</b>—plus which animals belong on each curve—then click to check!</p>
+      <div class="svg-stage">
+        <svg viewBox="0 0 500 230">
+          <line x1="55" y1="195" x2="465" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="55" y1="20" x2="55" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <text x="260" y="218" text-anchor="middle" fill="#cbd5e1" font-size="12">Relative Age (Birth → Old Age)</text>
+          <text x="20" y="110" transform="rotate(-90 20,110)" text-anchor="middle" fill="#cbd5e1" font-size="12">% Survivors</text>
+
+          <path d="M 55 30 C 310 30, 390 45, 455 195" fill="none" stroke="#10b981" stroke-width="3.5"/>
+          <text id="g2-1" x="235" y="48" fill="#6ee7b7" font-size="12" font-weight="bold">[ Top Green Curve: ? ]</text>
+
+          <line x1="55" y1="30" x2="455" y2="195" stroke="#f59e0b" stroke-width="3"/>
+          <text id="g2-2" x="205" y="112" fill="#fde68a" font-size="12" font-weight="bold">[ Middle Yellow Line: ? ]</text>
+
+          <path d="M 55 30 C 70 175, 120 190, 455 195" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+          <text id="g2-3" x="115" y="172" fill="#38bdf8" font-size="12" font-weight="bold">[ Bottom Blue Curve: ? ]</text>
+        </svg>
+      </div>
+      <div class="hotspot-row">
+        <button class="spot-btn" onclick="solveSpot('g2-1', 'Type I (K-Selected: Humans, Elephants, Whales)', this)">Reveal Top Green Curve</button>
+        <button class="spot-btn" onclick="solveSpot('g2-2', 'Type II (Constant Loss: Songbirds, Squirrels)', this)">Reveal Middle Yellow Line</button>
+        <button class="spot-btn" onclick="solveSpot('g2-3', 'Type III (r-Selected: Oysters, Mosquitoes, Weeds)', this)">Reveal Bottom Blue Curve</button>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE GRAPH 3: PREDATOR-PREY WAVES & BATHTUB SYSTEM -->
+    <div class="gcard">
+      <h3 style="margin:0 0 6px;color:var(--amber);">Interactive Graph 3: Isle Royale Predator-Prey Waves (Fig 19.5)</h3>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">Look at the two waves: why does the red dashed wave ALWAYS peak slightly to the right of the green solid wave?</p>
+      <div class="svg-stage">
+        <svg viewBox="0 0 500 190">
+          <line x1="45" y1="165" x2="470" y2="165" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="45" y1="20" x2="45" y2="165" stroke="#94a3b8" stroke-width="2"/>
+          <path d="M 50 135 Q 95 20 140 135 T 230 135 T 320 135 T 410 135" fill="none" stroke="#10b981" stroke-width="3"/>
+          <path d="M 75 148 Q 120 65 165 148 T 255 148 T 345 148 T 435 148" fill="none" stroke="#f43f5e" stroke-width="3" stroke-dasharray="5,3"/>
+          <text id="g3-1" x="65" y="38" fill="#6ee7b7" font-size="12" font-weight="bold">[ Green First Peak: ? ]</text>
+          <text id="g3-2" x="235" y="65" fill="#fda4af" font-size="12" font-weight="bold">[ Red Delayed Peak: ? ]</text>
+        </svg>
+      </div>
+      <div class="hotspot-row">
+        <button class="spot-btn" onclick="solveSpot('g3-1', 'PREY (Moose / Hare) Peaks First!', this)">Reveal Green Wave</button>
+        <button class="spot-btn" onclick="solveSpot('g3-2', 'PREDATOR (Wolf / Lynx) Lags Behind Prey!', this)">Reveal Red Wave</button>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE GRAPH 4: METAPOPULATION CORRIDORS & DENSITY FACTORS -->
+    <div class="gcard">
+      <h3 style="margin:0 0 6px;color:var(--violet);">Interactive Graph 4: Metapopulations, Corridors &amp; Inbreeding</h3>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--muted);">What is the bridge between Patch A and Patch B called, and what bad genetic problem happens in Isolated Patch C?</p>
+      <div class="svg-stage">
+        <svg viewBox="0 0 500 190">
+          <circle cx="90" cy="95" r="50" fill="#064e3b" stroke="#10b981" stroke-width="2.5"/>
+          <text x="90" y="98" text-anchor="middle" fill="#a7f3d0" font-size="12" font-weight="bold">Patch A</text>
+
+          <rect x="140" y="80" width="120" height="30" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3"/>
+          <text id="g4-1" x="200" y="99" text-anchor="middle" fill="#38bdf8" font-size="11.5" font-weight="bold">[ Bridge: ? ]</text>
+
+          <circle cx="310" cy="95" r="46" fill="#064e3b" stroke="#10b981" stroke-width="2.5"/>
+          <text x="310" y="98" text-anchor="middle" fill="#a7f3d0" font-size="12" font-weight="bold">Patch B</text>
+
+          <circle cx="430" cy="95" r="42" fill="#4c0519" stroke="#f43f5e" stroke-width="2.5"/>
+          <text id="g4-2" x="430" y="98" text-anchor="middle" fill="#fda4af" font-size="10.5" font-weight="bold">[ Isolated Trap: ? ]</text>
+        </svg>
+      </div>
+      <div class="hotspot-row">
+        <button class="spot-btn" onclick="solveSpot('g4-1', 'Habitat Corridor (Gene Flow ↔)', this)">Reveal Bridge</button>
+        <button class="spot-btn" onclick="solveSpot('g4-2', 'Inbreeding Depression!', this)">Reveal Isolated Trap</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3: "TEACH IT TO MOM" SIMULATOR -->
+<div class="pane" id="step3">
+  <div style="background:#111827;border:1px solid var(--border);padding:14px 18px;border-radius:12px;margin-bottom:16px;">
+    <b>Why This Works So Well for Mia:</b> Mia noticed that whenever she tries to explain a concept to her mom and gets stuck on one piece, <b>looking up that one missing piece locks the whole memory in forever</b>! Practice explaining these 5 questions out loud (to your mom or to the screen), and click <b>"Wait, I'm Stuck — Look Up That Piece"</b> whenever you hit a wall.
+  </div>
+  <div id="mom-container"></div>
+</div>
+
+<!-- STEP 4: REAL COLLEGE BOARD AP EXAM SCENARIO QUESTIONS -->
+<div class="pane" id="step4">
+  <div style="background:#111827;border:1px solid var(--border);padding:14px 18px;border-radius:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <div><b>Why Test 1 Felt Harder Than Muse Quizzes:</b> AP teachers use <b>multi-step College Board scenario &amp; data questions</b>—not 3-word definitions! Master these 12 real AP-style scenario questions and you will crush November 6.</div>
+    <button class="action-btn secondary" onclick="resetExam()">Reset AP Exam Score</button>
+  </div>
+  <div id="exam-list"></div>
+</div>
+
+<!-- STEP 5: WORDPLAY CARDS & WORKSHEET KEY -->
+<div class="pane" id="step5">
+  <h3 style="margin-top:0;color:var(--sky);">All 16 "LAX-Style" Wordplay Hooks + Mia's Worksheet Q&amp;A Key</h3>
+  <div id="ref-list"></div>
+</div>
+
+<script>
+// STEP 1 DATA (V4, rebuilt 2026-11-19 from each video's own transcript).
+// Every "video" concept below is something the linked video says, at the time shown.
+// "packet" concepts come from Mia's Ch. 6 reading guide, not the video, and are bonus.
+const bdTopics = [
+  {
+    title: "Topic 1: K-Selected vs. r-Selected Species (APES 3.2)",
+    vid: "z7A8rHod20M",
+    vidTitle: "Mr. Smedes - APES Video Notes 3.2: K-selected & r-selected species (9 min)",
+    vidSub: "This is the 3.2 video. (The old app wrongly played the 3.1 Specialist/Generalist video here.)",
+    q: "Brain-dump: what K-selected species do, what r-selected species do, what biotic potential means, why it's a spectrum, and which type becomes invasive or goes extinct more easily.",
+    keywords: [
+      {label:"K-selected = QUALITY over quantity: a few offspring, lots of parental care", t:7, src:"video",
+       quote:"\"K selected species use what I like to call quality over quantity\"",
+       match:["quality","few offspring","few babies","few kids","few young","parental care","take care","care of them","elephant","chimp","large mammal","k selected"]},
+      {label:"r-selected = QUANTITY: many offspring, little or no care (spiders, insects, fish, plants)", t:24, src:"video",
+       quote:"\"they have many many offspring in the hopes that at least some of them survive\"",
+       match:["quantity","many offspring","lots of offspring","many babies","lots of babies","hundreds","thousands","spider","insect","fish","oyster","no care","little care","no parental","fend for","crank out","r selected"]},
+      {label:"Biotic potential = the MAXIMUM reproduction rate (higher for r, lower for K)", t:70, src:"video",
+       quote:"\"biotic potential, which is the maximum reproduction rate of a population\"",
+       match:["biotic","maximum reproduct","max reproduct","reproduction rate","reproductive rate","growth rate"]},
+      {label:"It's a SPECTRUM: some species are in the middle (frog, hare)", t:339, src:"video",
+       quote:"\"not every organism is perfectly K-selected or r-selected... it is kind of a spectrum\"",
+       match:["spectrum","in the middle","in between","inbetween","frog","hare","rabbit","not perfectly"]},
+      {label:"K species stay stable near carrying capacity; r populations swing up and down", t:291, src:"video",
+       quote:"\"they exist near their carrying capacity... very variable population sizes\"",
+       match:["carrying capacity","stable","variable","fluctuat","up and down","boom","increase or decrease"]},
+      {label:"r species are more likely to become INVASIVE and outcompete K species", t:260, src:"video",
+       quote:"\"this reproductive rate can also make them more likely to become invasive species\"",
+       match:["invasive","outcompete","out compete","take over"]},
+      {label:"K species recover slowly from disturbance (fire, disease) and are more likely to go EXTINCT", t:426, src:"video",
+       quote:"\"K selected species are far more likely to go extinct than r selected species\"",
+       match:["extinct","disturb","recover","fire","disease","adapt","genetic diversity","less diversity"]}
+    ],
+    model: "<b>Model brain dump (all from the video):</b> <b>K-selected</b> species (elephants, chimps, big mammals) go for <b>quality over quantity</b>: few offspring, lots of parental care, live long, stay stable near <b>carrying capacity</b>. <b>r-selected</b> species (spiders, insects, fish, plants, oysters) go for <b>quantity</b>: many offspring, little or no care, short lives, populations swing up and down. <b>Biotic potential</b> is the maximum reproduction rate, high for r and low for K. It's a <b>spectrum</b> (frogs and hares are in the middle). r species are more likely to become <b>invasive</b>; K species recover slowly after a disturbance like a fire or disease and are more likely to go <b>extinct</b>."
+  },
+  {
+    title: "Topic 2: Survivorship Curves Type I, II, III (APES 3.3)",
+    vid: "YcFdWYyQxCs",
+    vidTitle: "Mr. Smedes - APES Video Notes 3.3: Survivorship Curves (7 min)",
+    vidSub: "Builds on 3.2. Watch Topic 1 first if K vs r is shaky.",
+    q: "Brain-dump: what a survivorship curve shows, what Type I, II and III look like with examples, and how K and r connect to them.",
+    keywords: [
+      {label:"A survivorship curve shows how many of a group (cohort) are still alive at each age", t:32, src:"video",
+       quote:"\"it plots how many of them are still alive at each age the group reaches\"",
+       match:["cohort","still alive","alive at","each age","survival rate","group born","same time","y axis","x axis"]},
+      {label:"Type I = most survive young and middle life, then drop sharply in OLD age (whale, humans)", t:171, src:"video",
+       quote:"\"many of those individuals are surviving early... a really sharp decline later in life\"",
+       match:["type 1","old age","late in life","later in life","whale","human","grizzly","bear"]},
+      {label:"Type I = K-selected, because of high parental care", t:186, src:"video",
+       quote:"\"with type 1 survivorship these are our K selected species\"",
+       match:["k selected","type 1 k","type 1 is k","k species","parental care","parents take","take care"]},
+      {label:"Type II = steady, constant decline all through life (birds, rodents, squirrels)", t:228, src:"video",
+       quote:"\"type 2 species experience a pretty constant and steady decline all throughout life\"",
+       match:["type 2","constant","steady","straight","diagonal","bird","rodent","squirrel","middle"]},
+      {label:"Type III = most die EARLY (as babies); r-selected (dandelions, trees, insects, fish)", t:267, src:"video",
+       quote:"\"very few type three individuals... will make it to middle age, most of them die in infancy\"",
+       match:["type 3","early","infancy","young","babies","seedling","dandelion","tree","insect","fish","r selected"]},
+      {label:"Age on the x-axis is RELATIVE to each species' lifespan", t:323, src:"video",
+       quote:"\"the units at the bottom here, age, these are relative units\"",
+       match:["relative","percent of lifespan","lifespan"]}
+    ],
+    model: "<b>Model brain dump (all from the video):</b> A <b>survivorship curve</b> shows how many of a <b>cohort</b> (a group born at the same time) are still alive at each age. <b>Type I</b> (whales, humans) survive youth and middle life and then drop sharply in <b>old age</b>; these are <b>K-selected</b> species, thanks to high parental care. <b>Type II</b> (birds, rodents, squirrels) decline at a <b>steady, constant</b> rate all through life. <b>Type III</b> (dandelions, trees, insects, fish) mostly <b>die early</b>; these are <b>r-selected</b> and make up for it with lots of offspring. Age on the x-axis is <b>relative</b> to each species' lifespan."
+  },
+  {
+    title: "Topic 3: Carrying Capacity, Overshoot & Die-Off (APES 3.4)",
+    vid: "MzXaqjXpk50",
+    vidTitle: "Mr. Smedes - APES Video Notes 3.4: Carrying Capacity (7 min)",
+    vidSub: "Examples in this video: a restaurant, deer, reindeer on St. Paul Island, and hare & lynx.",
+    q: "Brain-dump: what carrying capacity means, what limits it, what overshoot and die-off are, the reindeer story, and the hare and lynx cycle.",
+    keywords: [
+      {label:"Carrying capacity (K) = the MAX population an ecosystem can support (like a restaurant's max occupancy)", t:17, src:"video",
+       quote:"\"one way to think about carrying capacity is kind of like the maximum occupancy limit for a restaurant\"",
+       match:["carrying capacity","max","maximum","occupancy","restaurant","support"]},
+      {label:"Set by LIMITING resources: food, water, habitat / nesting sites", t:41, src:"video",
+       quote:"\"food, water, habitat needs such as nesting sites... we call these limiting factors\"",
+       match:["limiting","food","water","habitat","nest","space"]},
+      {label:"Populations FLUCTUATE above and below K instead of sitting right on it", t:74, src:"video",
+       quote:"\"populations usually don't exist perfectly at the carrying capacity but instead fluctuate around it\"",
+       match:["fluctuat","around","above and below","up and down","go over","go under"]},
+      {label:"OVERSHOOT (going over K) is followed by a DIE-OFF because a resource gets used up", t:97, src:"video",
+       quote:"\"when populations go over their carrying capacity, which is called the overshoot, there's a die-off\"",
+       match:["overshoot","over shoot","die off","dieoff","deplet","used up","run out","starv"]},
+      {label:"Deer: fawns born each spring push the herd over K, then many die off", t:183, src:"video",
+       quote:"\"there are too many new fawns for the vegetation to support\"",
+       match:["deer","fawn","spring"]},
+      {label:"Reindeer on St. Paul Island overgrazed the lichen and CRASHED to 8", t:214, src:"video",
+       quote:"\"a severe population crash down to only eight individuals in 1950\"",
+       match:["reindeer","st paul","saint paul","lichen","island","overgraz","crash","catastroph"]},
+      {label:"Predator and prey cycle: hare go up, lynx go up, hare crash, lynx crash, repeat", t:315, src:"video",
+       quote:"\"the hare is the main prey of the lynx... a very predictable pattern\"",
+       match:["hare","lynx","predator","prey","cycle","rabbit"]}
+    ],
+    model: "<b>Model brain dump (all from the video):</b> <b>Carrying capacity (K)</b> is the maximum population an ecosystem can support, like a restaurant's max occupancy. It's set by <b>limiting resources</b>: food, water, habitat and nesting sites. Populations <b>fluctuate</b> around K. When they <b>overshoot</b> K they use up a resource and a <b>die-off</b> follows (deer each spring when new fawns arrive). A big die-off is a <b>crash</b>: reindeer on <b>St. Paul Island</b> overgrazed their winter <b>lichen</b> and fell to 8 animals by 1950. Predators can set K too: <b>hare and lynx</b> rise and fall in a repeating cycle."
+  },
+  {
+    title: "Topic 4: Population Growth & Resource Availability (APES 3.5)",
+    vid: "NL-Q-C4HPFA",
+    vidTitle: "Mr. Smedes - APES Video Notes 3.5: Population Growth & Resource Availability (10 min)",
+    vidSub: "Covers density, distribution, sex ratio, density-dependent vs independent, and the birth/death math.",
+    q: "Brain-dump: density and distribution, sex ratio, density-dependent vs density-independent factors with examples, exponential vs logistic growth, and the 2 inputs and 2 outputs of population size.",
+    keywords: [
+      {label:"Density = number of individuals per unit of area (more density = more competition and disease)", t:164, src:"video",
+       quote:"\"density is the number of individuals per unit of area\"",
+       match:["per unit","per area","per square","per mile","density is","how crowded","crowded"]},
+      {label:"Distribution: random (trees), uniform (toxins, nests, shorebirds), clumped (herds, meerkats)", t:187, src:"video",
+       quote:"\"random... uniform... and lastly we have clumped distribution\"",
+       match:["random","uniform","clump","meerkat","herd","spread out","distribution"]},
+      {label:"Sex ratio = males to females; close to 50/50 is best for reproduction", t:237, src:"video",
+       quote:"\"generally the closer to 50/50 the more optimal for reproduction\"",
+       match:["sex ratio","50 50","5050","male","female"]},
+      {label:"Density-DEPENDENT factors get worse when crowded: food, water, habitat, disease", t:284, src:"video",
+       quote:"\"density dependent factors are going to limit population growth due to individuals becoming too densely populated\"",
+       match:["density dependent","dependent","competition","disease","food","nesting"]},
+      {label:"Density-INDEPENDENT factors hit any size population: floods, hurricanes, tornadoes, fires", t:347, src:"video",
+       quote:"\"natural disasters impact both populations pretty similarly\"",
+       match:["independent","natural disaster","flood","hurricane","tornado","fire","drought"]},
+      {label:"More of a limiting resource = higher carrying capacity (Gause doubled the food, K doubled)", t:424, src:"video",
+       quote:"\"since their food supply was doubled their carrying capacity was roughly doubled\"",
+       match:["paramecium","gause","gauss","double","petri","more food"]},
+      {label:"Exponential growth (J, no limits) vs logistic growth (levels off at K)", t:464, src:"video",
+       quote:"\"we call this model logistic growth and this is what happens in all natural ecosystems\"",
+       match:["exponential","logistic","j curve","s curve","level off","levels off"]},
+      {label:"Births + immigration ADD to a population; deaths + emigration SUBTRACT", t:527, src:"video",
+       quote:"\"immigration and birth are the two inputs... deaths and emigration are going to reduce population size\"",
+       match:["birth","immigra","emigra","death"]}
+    ],
+    model: "<b>Model brain dump (all from the video):</b> <b>Density</b> is individuals per unit of area; the denser, the more competition and disease. <b>Distribution</b> can be random (trees), uniform (plants with toxins, nesting animals, shorebirds) or clumped (herds, meerkats). <b>Sex ratio</b> near 50/50 is best. <b>Density-dependent</b> factors get worse with crowding (food, water, habitat, disease). <b>Density-independent</b> factors hit any size population (floods, hurricanes, tornadoes, fires). When Gause <b>doubled the food</b>, carrying capacity roughly doubled. Growth starts <b>exponential</b> and becomes <b>logistic</b> as it levels off at K. <b>Births + immigration</b> add; <b>deaths + emigration</b> subtract."
+  },
+  {
+    title: "Topic 5: Metapopulations & Corridors (plus 2 bonus ideas from your Ch. 6 packet)",
+    vid: "1Zn0PGAgXCg",
+    vidTitle: "APES Metapopulation #197 (2 min)",
+    vidSub: "Short video on metapopulations and habitat corridors. The 2 purple ideas below are from your reading, not the video.",
+    q: "Brain-dump: what a metapopulation is, what causes them, what corridors do, and why that matters. Bonus from your packet: the New England farmland story and inbreeding depression.",
+    keywords: [
+      {label:"Metapopulation = separate populations connected by occasional movement of individuals", t:0, src:"video",
+       quote:"\"a group of spatially distinct populations that are connected by the occasional movement of individuals\"",
+       match:["meta","separate","distinct","patch","connected","spread apart"]},
+      {label:"Often caused by habitat destruction (coral reef fish, cougars in mountain ranges)", t:23, src:"video",
+       quote:"\"many metapopulations have been created as a result of habitat destruction\"",
+       match:["habitat destruction","destroy","coral","reef","cougar","mountain lion","bleach"]},
+      {label:"Habitat corridors = strips of habitat that connect the separated populations", t:88, src:"video",
+       quote:"\"these strips of habitat, known as habitat corridors\"",
+       match:["corridor","strip","bridge","path","connect"]},
+      {label:"Corridors raise genetic variation, protect against disasters, and let patches recolonize", t:103, src:"video",
+       quote:"\"if one population becomes extinct, another population can recolonize\"",
+       match:["genetic","variation","diversity","recoloni","extinct","fire","catastroph"]},
+      {label:"BONUS (packet): abandoned New England farms went goldenrod, then white pine, then broadleaf forest", t:null, src:"packet",
+       match:["goldenrod","pine","broadleaf","farm","new england"]},
+      {label:"BONUS (packet): inbreeding depression = small isolated groups mating with relatives", t:null, src:"packet",
+       match:["inbreed","inbred","relative","cousin"]}
+    ],
+    model: "<b>Model brain dump:</b> A <b>metapopulation</b> is a group of separate populations connected by the occasional movement of individuals. Many are caused by <b>habitat destruction</b> (coral reef fish, cougars in separate mountain ranges). <b>Habitat corridors</b> are strips of habitat that connect them, which raises <b>genetic variation</b>, protects the species from disasters like fires, and lets a patch be <b>recolonized</b> if one population dies out. <i>From your packet:</i> abandoned New England farmland went from goldenrod to white pine to broadleaf forest, and small isolated groups can suffer <b>inbreeding depression</b>."
+  }
+];
+
+let curBd = 0;
+const bdTopicsDiv = document.getElementById("bd-topics");
+bdTopics.forEach((t, i) => {
+  const b = document.createElement("button");
+  b.className = "bd-topic-btn" + (i===0?" active":"");
+  b.innerText = t.title;
+  b.onclick = () => selectBd(i, b);
+  bdTopicsDiv.appendChild(b);
+});
+
+function fmt(s){ const m=Math.floor(s/60), x=s%60; return m+":"+String(x).padStart(2,"0"); }
+function embedUrl(id, start, auto){
+  return "https://www.youtube-nocookie.com/embed/"+id+"?rel=0&modestbranding=1&playsinline=1"+(start?("&start="+start):"")+(auto?"&autoplay=1":"");
+}
+function jump(sec){
+  const t = bdTopics[curBd];
+  document.getElementById("yt").src = embedUrl(t.vid, Math.max(0, sec-2), true);
+  document.getElementById("yt").scrollIntoView({behavior:"smooth", block:"center"});
+}
+function toggleListen(){
+  const l = document.getElementById("listen");
+  l.style.display = (l.style.display === "block") ? "none" : "block";
+}
+function store(k, v){ try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch(e) { return null; } }
+function saveDraft(){
+  store("mia-apes-bd-"+curBd, document.getElementById("bd-textarea").value);
+  document.getElementById("saved").innerText = "Saved on this device";
+}
+
+function selectBd(i, btn) {
+  curBd = i;
+  document.querySelectorAll(".bd-topic-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  const t = bdTopics[i];
+  document.getElementById("vid-title").innerText = t.vidTitle;
+  document.getElementById("vid-sub").innerText = t.vidSub;
+  document.getElementById("yt").src = embedUrl(t.vid, 0, false);
+  document.getElementById("vid-open").href = "https://www.youtube.com/watch?v=" + t.vid;
+  document.getElementById("bd-title").innerText = t.title;
+  document.getElementById("bd-question").innerText = t.q;
+  const l = document.getElementById("listen");
+  l.style.display = "none";
+  l.innerHTML = t.keywords.map(k => k.src === "video"
+      ? `<li><button class="ts-btn" onclick="jump(${k.t})">&#9654; ${fmt(k.t)}</button> ${k.label}</li>`
+      : `<li>${k.label}<span class="src-tag src-packet">from your packet</span></li>`).join("");
+  document.getElementById("bd-textarea").value = store("mia-apes-bd-"+i) || "";
+  document.getElementById("saved").innerText = "";
+  document.getElementById("bd-result").innerText = "";
+  document.getElementById("meter").style.display = "none";
+  document.getElementById("bd-model").style.display = "none";
+  renderChips(false);
+}
+
+// Forgiving matcher: ignores case, hyphens, punctuation, Roman numerals, and small typos.
+function norm(s){
+  return " " + s.toLowerCase()
+    .replace(/[‘’']/g, "")
+    .replace(/[-_/.,;:!?()"]/g, " ")
+    .replace(/\btype\s+iii\b|\btype\s+three\b/g, "type 3")
+    .replace(/\btype\s+ii\b|\btype\s+two\b/g, "type 2")
+    .replace(/\btype\s+i\b|\btype\s+one\b/g, "type 1")
+    .replace(/\s+/g, " ") + " ";
+}
+function lev(a, b){
+  const d = Array.from({length:a.length+1}, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1] + (a[i-1]===b[j-1]?0:1));
+  return d[a.length][b.length];
+}
+function hasTerm(text, words, term){
+  const t = norm(term).trim();
+  if (text.includes(" " + t)) return true;               // phrase or word start
+  if (t.includes(" ")) return text.replace(/ /g,"").includes(t.replace(/ /g,""));
+  if (t.length < 5) return false;                         // short words must be exact
+  const tol = t.length >= 8 ? 2 : 1;                      // typo tolerance
+  return words.some(w => w.length >= t.length - 1 && lev(w.slice(0, t.length), t) <= tol);
+}
+
+function renderChips(graded, text="") {
+  const wrap = document.getElementById("bd-chips");
+  wrap.innerHTML = "";
+  const n = norm(text), words = n.trim().split(" ").filter(Boolean);
+  const ks = bdTopics[curBd].keywords;
+  let vHit = 0, vTot = 0, pHit = 0, pTot = 0;
+  ks.forEach(k => {
+    const hit = graded && k.match.some(m => hasTerm(n, words, m));
+    if (k.src === "video") { vTot++; if (hit) vHit++; } else { pTot++; if (hit) pHit++; }
+    const div = document.createElement("div");
+    div.className = "concept" + (graded ? (hit ? " hit" : " miss") : "");
+    const tag = k.src === "video" ? `<span class="src-tag src-video">in the video</span>` : `<span class="src-tag src-packet">from your packet</span>`;
+    const btn = k.src === "video" ? ` <button class="ts-btn" onclick="jump(${k.t})">&#9654; ${graded && !hit ? "Rewatch " : ""}${fmt(k.t)}</button>` : "";
+    div.innerHTML = (graded ? (hit ? "&#9989; " : "&#10060; ") : "&bull; ") + k.label + tag + btn +
+      (graded && !hit && k.quote ? `<div class="quote">He says: ${k.quote}</div>` : "");
+    wrap.appendChild(div);
+  });
+  if (graded) {
+    const pct = vTot ? Math.round(100 * vHit / vTot) : 0;
+    document.getElementById("meter").style.display = "block";
+    setTimeout(() => document.getElementById("meter-fill").style.width = pct + "%", 30);
+    let msg = `Video ideas: <span style="color:var(--emerald)">${vHit} / ${vTot}</span>`;
+    if (pTot) msg += ` &nbsp;|&nbsp; Packet bonus: <span style="color:#d8b4fe">${pHit} / ${pTot}</span>`;
+    msg += vHit === vTot ? " &nbsp;&#127881; You got every idea in the video!" :
+           " &nbsp;Tap a red one's time button to hear that part, then add it in your own words.";
+    document.getElementById("bd-result").innerHTML = msg;
+  }
+}
+function gradeBrainDump() { renderChips(true, document.getElementById("bd-textarea").value); }
+function showAllKeywords() {
+  const m = document.getElementById("bd-model");
+  m.style.display = "block";
+  m.innerHTML = bdTopics[curBd].model;
+}
+function clearBrainDump() {
+  document.getElementById("bd-textarea").value = "";
+  saveDraft();
+  document.getElementById("saved").innerText = "";
+  document.getElementById("bd-result").innerText = "";
+  document.getElementById("meter").style.display = "none";
+  document.getElementById("bd-model").style.display = "none";
+  renderChips(false);
+}
+selectBd(0, bdTopicsDiv.children[0]);
+
+// STEP 2: INTERACTIVE GRAPH HOTSPOTS
+const defaultSpots = {
+  "g1-A": "[ A: ? Blue Curve ]",
+  "g1-B": "[ B: ? Ceiling Line ]",
+  "g1-C": "[ C: ? Peak Above K ]",
+  "g1-D": "[ D: ? Crash Below K ]",
+  "g1-E": "[ E: ? Green Curve ]",
+  "g2-1": "[ Top Green Curve: ? ]",
+  "g2-2": "[ Middle Yellow Line: ? ]",
+  "g2-3": "[ Bottom Blue Curve: ? ]",
+  "g3-1": "[ Green First Peak: ? ]",
+  "g3-2": "[ Red Delayed Peak: ? ]",
+  "g4-1": "[ Bridge: ? ]",
+  "g4-2": "[ Isolated Trap: ? ]"
+};
+function solveSpot(id, text, btn) {
+  document.getElementById(id).textContent = text;
+  btn.classList.add("solved");
+  btn.innerText = "✓ " + text;
+}
+function resetGraphs() {
+  Object.keys(defaultSpots).forEach(k => {
+    document.getElementById(k).textContent = defaultSpots[k];
+  });
+  document.querySelectorAll(".spot-btn").forEach(b => {
+    b.classList.remove("solved");
+  });
+}
+
+// STEP 3: "TEACH IT TO MOM" SIMULATOR
+const momPrompts = [
+  {
+    mom: "Mom asks: 'Mia, I see this S-curve and this dotted line K on your sheet. Why doesn't the animal population just stop smoothly at K? Why does the red line shoot above K and then crash?'",
+    guide: "Explain to Mom out loud: (1) What K stands for, (2) what the peak above K is called, (3) WHY the animals overshoot K (hint: pregnancy time lag!), and (4) what the crash is called.",
+    lookup: "<b>The Missing Piece ('Aha!' Rescue):</b> It's called an <b>OVERSHOOT</b> followed by a <b>DIE-OFF</b>! Animals don't stop right at Carrying Capacity (<b>K</b>) because of a <b>reproductive time lag</b>: females that got pregnant when there was still plenty of food give birth <i>after</i> the herd reaches K. Those extra babies eat up all the remaining food (overgrazing), causing a starvation crash (<b>Die-off</b>)!"
+  },
+  {
+    mom: "Mom asks: 'Wait, what's the difference between Density-Dependent and Density-Independent on Question 7? Which one is a wildfire or a freeze, and why?'",
+    guide: "Explain to Mom out loud: Which one depends on how crowded the animals are, and why a wildfire or freeze is the other one.",
+    lookup: "<b>The Missing Piece ('Aha!' Rescue):</b> Wordplay trick: <b>D</b>ependent = <b>D</b>inner (food) &amp; <b>D</b>isease in a <b>D</b>ense crowd! (If 500 deer are packed together, flu spreads fast and food runs out). <b>I</b>ndependent = <b>I</b>nferno (wildfire) or <b>I</b>ce storm! A wildfire or freeze kills 80% of the bugs whether there are 10 bugs or 10,000 bugs—it doesn't care how crowded they are."
+  },
+  {
+    mom: "Mom asks: 'If a sudden climate change or forest fire hits an ecosystem, wouldn't big strong animals like elephants (K-selected) survive better than tiny weeds and mice (r-selected)?'",
+    guide: "Tell Mom why that's a trap! Explain which one actually survives environmental change better (r-selected vs K-selected) and why.",
+    lookup: "<b>The Missing Piece ('Aha!' Rescue):</b> No! <b>r-selected species</b> (weeds, mice, insects) survive sudden environmental change WAY better than K-selected elephants! Why? Because <b>r-selected</b> species reproduce super fast (short generation time) and have thousands of babies, so they can quickly recolonize a burned forest and genetically adapt, while elephants take years just to have 1 baby."
+  },
+  {
+    mom: "Mom asks: 'Why are they spending millions of dollars building a grassy bridge over the 101 freeway for mountain lions? Can't the mountain lions just stay on their side of the freeway?'",
+    guide: "Use your 3 magic words from Module 19 to explain this to Mom: Metapopulation, Habitat Corridor, and Inbreeding Depression!",
+    lookup: "<b>The Missing Piece ('Aha!' Rescue):</b> The separated pockets of mountain lions form a <b>Metapopulation</b>. Without a <b>Habitat Corridor</b> (the wildlife bridge) allowing lions to cross and mix genes, a small isolated pocket ends up mating with close relatives—causing <b>Inbreeding Depression</b> (genetic defects and lower baby survival)!"
+  },
+  {
+    mom: "Mom asks: 'On this Survivorship graph with Type I, Type II, and Type III lines—why does the Type III line drop straight to the bottom right at the beginning?'",
+    guide: "Explain to Mom what kind of parents Type III species are (r-selected) and give her 2 examples of Type III and 2 examples of Type I.",
+    lookup: "<b>The Missing Piece ('Aha!' Rescue):</b> <b>Type III</b> species are <b>r-selected</b> (like oysters, mosquitoes, dandelions, and sea turtles). They lay thousands of eggs/seeds and give <b>zero parental care</b>, so almost all the babies get eaten right at the start of life! Only a tiny fraction survive to old age. By contrast, <b>Type I</b> (humans, elephants) are <b>K-selected</b> with huge parental care, so almost everyone survives until old age."
+  }
+];
+
+const momDiv = document.getElementById("mom-container");
+momPrompts.forEach((m, i) => {
+  const c = document.createElement("div");
+  c.className = "mom-card";
+  c.innerHTML = `
+    <div class="mom-bubble">👩‍👧 ${m.mom}</div>
+    <div style="font-size:13.5px;color:#cbd5e1;margin-bottom:10px;"><b>Your Turn to Teach Mom:</b> ${m.guide}</div>
+    <button class="action-btn secondary" onclick="document.getElementById('mom-help-${i}').style.display='block'">Wait, I'm Stuck — Look Up That Missing Piece 🔍</button>
+    <div class="stuck-box" id="mom-help-${i}">${m.lookup}</div>
+  `;
+  momDiv.appendChild(c);
+});
+
+// STEP 4: 12 AUTHENTIC AP EXAM MULTI-STEP SCENARIO QUESTIONS
+const examQuestions = [
+  {
+    stim: "<b>Scenario (Data Table):</b> Ecologists studying an isolated island recorded the following data for a deer population in 2026:<br>• Starting Population (Jan 1): <b>500 deer</b><br>• Births: <b>120</b> &nbsp;|&nbsp; Deaths: <b>60</b> &nbsp;|&nbsp; Immigration: <b>0</b> &nbsp;|&nbsp; Emigration: <b>10</b>",
+    q: "1. Based on the data above, what is the population size at the end of the year, and what is the annual population growth rate (% change)?",
+    opts: [
+      "550 deer; +10% growth rate",
+      "570 deer; +14% growth rate",
+      "620 deer; +24% growth rate",
+      "450 deer; -10% growth rate"
+    ],
+    a: 0,
+    hint: "Step 1: Net change = (Births 120 + Immigration 0) - (Deaths 60 + Emigration 10) = +50 deer. Step 2: 50 / 500 starting deer = 10%!",
+    exp: "New population = 500 + (120 + 0) - (60 + 10) = 550 deer. Percentage growth = (50 / 500) × 100 = +10%."
+  },
+  {
+    stim: "<b>Scenario (Isle Royale Graph Analysis):</b> On Isle Royale, wolves are the sole predator of moose. In 1980, visitors accidentally introduced canine parvovirus, a contagious viral disease that killed 75% of the wolf population within two years.",
+    q: "2. Which of the following best predicts the immediate cascade of events in the moose population following the 1980 wolf crash?",
+    opts: [
+      "The moose population immediately dropped to zero because canine parvovirus is a density-independent factor for moose.",
+      "The moose population grew rapidly, overshot the island's carrying capacity (K) for browse vegetation, and subsequently suffered a starvation die-off.",
+      "The moose switched from a Type I survivorship curve to a Type III survivorship curve.",
+      "The carrying capacity (K) of moose on the island permanently increased to infinity."
+    ],
+    a: 1,
+    hint: "Think about the wolves-and-moose seesaw: if wolves disappear, nothing eats the moose → moose boom past ceiling K → moose eat all the twigs/plants → moose crash!",
+    exp: "Without wolf predation, the moose population experienced exponential growth, overshot the vegetation carrying capacity, overgrazed the island's plants, and suffered a severe die-off."
+  },
+  {
+    stim: "<b>Scenario (Invasive Species):</b> Zebra mussels were accidentally introduced into the Great Lakes from ship ballast water. Female zebra mussels begin reproducing within their first year, release up to 1,000,000 microscopic free-swimming larvae per year, and provide no parental care. Native unionid mussels mature slowly over 6–10 years and have much lower reproductive output.",
+    q: "3. Which statement correctly explains why zebra mussels were able to outcompete native unionid mussels so rapidly?",
+    opts: [
+      "Zebra mussels are K-selected specialists with a Type I survivorship curve.",
+      "Zebra mussels are r-selected species with high biotic potential (intrinsic growth rate r) and Type III survivorship, allowing rapid population growth in a new habitat.",
+      "Zebra mussels experience severe inbreeding depression due to habitat corridors.",
+      "Native unionid mussels are density-independent organisms."
+    ],
+    a: 1,
+    hint: "1,000,000 tiny larvae + fast maturity + zero parental care = classic <b>r-selected / Type III</b> invasive superpower!",
+    exp: "High fecundity (1 million larvae), early maturity, and zero parental care are classic r-selected traits (Type III survivorship) that give invasive species explosive biotic potential."
+  },
+  {
+    stim: "<b>Scenario (Field Study):</b> A biologist maps the locations of three different species in a desert reserve:<br>• <b>Species X (Creosote bush):</b> Roots release chemicals that inhibit nearby seedlings, resulting in bushes spaced exactly 3 meters apart.<br>• <b>Species Y (Desert pupfish):</b> Gathers in tight schools around warm spring vents.<br>• <b>Species Z (Wind-blown annual flower):</b> Grows wherever seeds happen to land on flat sand.",
+    q: "4. What are the population distribution patterns of Species X, Species Y, and Species Z, respectively?",
+    opts: [
+      "X: Clumped, Y: Uniform, Z: Random",
+      "X: Uniform, Y: Clumped, Z: Random",
+      "X: Random, Y: Clumped, Z: Uniform",
+      "X: Uniform, Y: Random, Z: Clumped"
+    ],
+    a: 1,
+    hint: "Evenly spaced 3m apart = <b>Uniform</b> (X). Tight schools = <b>Clumped</b> (Y). Wherever wind blows = <b>Random</b> (Z).",
+    exp: "Chemical competition between creosote bushes creates Uniform spacing (X); schooling around resources is Clumped (Y); wind dispersal on uniform sand is Random (Z)."
+  },
+  {
+    stim: "<b>Scenario (Worksheet Q7 Application):</b> Two populations of songbirds live in separate valleys. Valley A has a high density of 5,000 birds per square kilometer; Valley B has a low density of 50 birds per square kilometer.",
+    q: "5. Which of the following events would cause a significantly HIGHER mortality percentage in crowded Valley A than in sparse Valley B?",
+    opts: [
+      "A Category 5 hurricane sweeping equally across both valleys",
+      "An outbreak of avian conjunctivitis (a contagious bacterial eye infection transmitted at bird feeders)",
+      "A sudden volcanic ashfall covering both valleys in 10 cm of ash",
+      "A severe 3-day sub-zero freeze hitting the entire region"
+    ],
+    a: 1,
+    hint: "The question is asking: which one is <b>Density-DEPENDENT</b> (worse in crowded Valley A)? Remember: <b>D</b>ependent = <b>D</b>isease!",
+    exp: "Contagious disease is a density-dependent factor—transmission rates skyrocket when hosts are packed closely together in Valley A. Hurricanes, volcanoes, and freezes are density-independent."
+  },
+  {
+    stim: "<b>Scenario (Conservation Biology):</b> A new 8-lane highway divides a continuous forest into four small, isolated forest fragments. Over the next 30 years, biologists notice that black bears in the smallest fragment have higher rates of birth defects and lower cub survival.",
+    q: "6. What ecological mechanism caused the decline in cub survival, and what is the most effective management solution?",
+    opts: [
+      "Mechanism: Overshoot; Solution: Introduce apex predators",
+      "Mechanism: Inbreeding depression in an isolated subpopulation; Solution: Construct wildlife habitat corridors to restore gene flow across the metapopulation",
+      "Mechanism: Competitive exclusion; Solution: Convert bears to r-selected reproduction",
+      "Mechanism: Density-independent weather; Solution: Add nitrogen and phosphorus fertilizer"
+    ],
+    a: 1,
+    hint: "Small isolated fragment → cousins mating → birth defects = <b>Inbreeding Depression</b>. Fix = <b>Habitat Corridor</b>!",
+    exp: "Isolated subpopulations suffer from inbreeding depression when close relatives breed. Building habitat corridors reconnects the metapopulation and restores genetic diversity."
+  },
+  {
+    stim: "<b>Scenario (Logistic Growth Curve):</b> A fish farmer stocks a pond with 50 tilapia. The pond's food and dissolved oxygen can support a maximum carrying capacity (K) of 1,000 tilapia.",
+    q: "7. At approximately what population size (N) is the tilapia population adding the MAXIMUM number of new fish per month (the steepest upward slope of the S-shaped logistic curve)?",
+    opts: [
+      "When N = 1,000 (at Carrying Capacity K)",
+      "When N = 500 (at half of Carrying Capacity, K/2)",
+      "When N = 0",
+      "When N = 2,000 (during a die-off)"
+    ],
+    a: 1,
+    hint: "Classic APES curve question! On an S-curve, at the very bottom (N=10) there are barely any parents; at the top (N=1,000) growth stops (0). Where is the curve steepest? Right in the middle at <b>K/2 (500)</b>!",
+    exp: "In logistic growth (S-curve), the fastest absolute growth rate (steepest slope / inflection point) occurs at half the carrying capacity (K/2 = 500)."
+  },
+  {
+    stim: "<b>Scenario (New England Forest Succession — Module 18 Opening Story):</b> After farmers abandoned cleared fields in New England, goldenrod dominated for several years but then declined sharply even though rainfall and temperature remained optimal.",
+    q: "8. Why did the goldenrod population decline, and what ecological principle does this illustrate?",
+    opts: [
+      "Goldenrod depleted all atmospheric oxygen; illustrates density-independent extinction.",
+      "Growing eastern white pines shaded out the sun-loving goldenrod; illustrates that population changes are driven by community-level interactions among multiple species.",
+      "Goldenrod is a K-selected mammal that suffered inbreeding depression.",
+      "Wolves ate the goldenrod during a predator-prey cycle."
+    ],
+    a: 1,
+    hint: "Think of the New England timeline: Weeds/Goldenrod → White Pines grow taller and block the sun → Goldenrod gets shaded out!",
+    exp: "Taller white pines outcompeted goldenrod for sunlight (a limiting resource for plants), demonstrating why community-level analysis is essential."
+  },
+  {
+    stim: "<b>Scenario (Age Structure & Sex Ratio — Module 18 Q5):</b> Biologists compare two endangered turtle populations of equal size (N = 400). Population 1 consists of 80% post-reproductive elderly males and 20% young females. Population 2 consists of 65% young pre-reproductive and reproductive females and 35% reproductive males.",
+    q: "9. Which prediction is best supported by the sex ratio and age structure of the two populations?",
+    opts: [
+      "Both populations will grow at the exact same rate because both have N = 400.",
+      "Population 2 has strong positive growth momentum, whereas Population 1 is likely to decline as elderly individuals die without enough reproductive females to replace them.",
+      "Population 1 will overshoot carrying capacity within one year.",
+      "Age structure and sex ratio have no effect on population growth rate."
+    ],
+    a: 1,
+    hint: "Just like Mia wrote on her worksheet for Q5: more young reproductive females = way more babies in the next generation!",
+    exp: "A population with a high proportion of pre-reproductive and reproductive females (Pop 2) will produce many offspring, while an aging, male-skewed population (Pop 1) will shrink."
+  },
+  {
+    stim: "<b>Scenario (Plant & Animal Limiting Resources — Module 18 Q8):</b> A farmer notices crop growth in a sunny, well-watered field has plateaued. Meanwhile, a wildlife biologist notices wood duck populations in a food-rich wetland have stopped growing after dead hollow trees were cut down.",
+    q: "10. What are the most likely limiting resources restricting the crop population and the wood duck population, respectively?",
+    opts: [
+      "Crops: Nesting sites; Wood ducks: Nitrogen and Phosphorus",
+      "Crops: Soil macronutrients (Nitrogen and Phosphorus); Wood ducks: Nesting sites (tree cavities)",
+      "Crops: Emigration; Wood ducks: Sunlight",
+      "Crops: Tornadoes; Wood ducks: Wildfires"
+    ],
+    a: 1,
+    hint: "Mia's Q8 answer: Terrestrial plants are limited by <b>Nitrogen &amp; Phosphorus</b>; animals like wood ducks are limited by <b>nest sites</b>!",
+    exp: "When water and sun are ample, terrestrial plants are typically limited by Nitrogen (N) and Phosphorus (P). Wood ducks nest inside hollow tree cavities, making nest sites their limiting factor."
+  },
+  {
+    stim: "<b>Scenario (Survivorship Curve Graph):</b> A graph plots the log of surviving individuals (y-axis) against relative age (x-axis). Curve A stays nearly flat near 100% until 80% of the lifespan and then drops sharply. Curve C drops 95% within the first 5% of the lifespan.",
+    q: "11. Which pair of organisms correctly matches Curve A and Curve C?",
+    opts: [
+      "Curve A: Mosquito; Curve C: Bighorn sheep",
+      "Curve A: Bighorn sheep (or Human); Curve C: Mosquito (or Dandelion)",
+      "Curve A: Dandelion; Curve C: Oyster",
+      "Curve A: Songbird; Curve C: Squirrel"
+    ],
+    a: 1,
+    hint: "Curve A = <b>Type I</b> (lives to old age: Sheep/Human). Curve C = <b>Type III</b> (dies right at the start: Mosquito/Dandelion).",
+    exp: "Curve A describes a Type I K-selected mammal (bighorn sheep/human); Curve C describes a Type III r-selected species with massive juvenile mortality (mosquito/dandelion)."
+  },
+  {
+    stim: "<b>Scenario (Science Applied — Module 19 Q9 & Q10):</b> Suburban towns in the northeastern United States have experienced a massive overabundance of white-tailed deer, leading to loss of forest understory plants, high rates of Lyme disease, and frequent vehicle collisions.",
+    q: "12. Which combination correctly identifies a primary human cause of this deer overabundance AND a realistic control method suited for a densely populated suburban neighborhood?",
+    opts: [
+      "Cause: Excess wolves in suburbs; Control: Unregulated high-powered rifle hunting in school zones",
+      "Cause: Elimination of apex predators (wolves/cougars) and creation of fragmented edge habitats; Control: Immunocontraception (fertility control), deer fencing, or targeted sharpshooting",
+      "Cause: Deer switching to photosynthesis; Control: Adding nitrogen fertilizer to lawns",
+      "Cause: Inbreeding depression; Control: Building more highways"
+    ],
+    a: 1,
+    hint: "Look at Module 19 Q9 &amp; Q10: Humans wiped out predators (wolves/cougars) and planted tasty suburban shrubs. In crowded suburbs where open rifle hunting is unsafe, towns use fertility contraception, fencing, or sharpshooters.",
+    exp: "Removing top predators and creating suburban edge habitat drives deer overabundance; urban/suburban management relies on non-lethal fertility control, barriers, or controlled sharpshooting."
+  }
+];
+
+let examScore = 0;
+const examAnswered = new Set();
+const examDiv = document.getElementById("exam-list");
+
+function buildExam() {
+  examDiv.innerHTML = "";
+  examQuestions.forEach((item, idx) => {
+    const c = document.createElement("div");
+    c.className = "q-card";
+    const opts = item.opts.map((o, oIdx) => `
+      <button class="q-opt" onclick="pickExam(${idx}, ${oIdx}, ${item.a}, this)">${String.fromCharCode(65+oIdx)}. ${o}</button>
+    `).join("");
+    c.innerHTML = `
+      <div class="stimulus-box">${item.stim}</div>
+      <div class="q-title">${item.q}</div>
+      <div>${opts}</div>
+      <button class="hint-btn" onclick="document.getElementById('ehint-${idx}').style.display='block'">Show Wordplay / Step-by-Step Hint 💡</button>
+      <div class="hint-box" id="ehint-${idx}">${item.hint}</div>
+      <div class="ans-box" id="eans-${idx}"></div>
+    `;
+    examDiv.appendChild(c);
+  });
+}
+
+function pickExam(qIdx, chosen, correct, btn) {
+  const ansBox = document.getElementById("eans-" + qIdx);
+  ansBox.style.display = "block";
+  if (chosen === correct) {
+    btn.style.borderColor = "#10b981";
+    btn.style.background = "rgba(16,185,129,0.22)";
+    ansBox.style.background = "rgba(16,185,129,0.12)";
+    ansBox.style.color = "#6ee7b7";
+    ansBox.innerHTML = "✓ College Board Mastery! " + examQuestions[qIdx].exp;
+    if (!examAnswered.has(qIdx)) {
+      examAnswered.add(qIdx);
+      examScore++;
+      document.getElementById("live-score").innerText = `AP Exam Score: ${examScore} / 12`;
+    }
+  } else {
+    btn.style.borderColor = "#f43f5e";
+    btn.style.background = "rgba(244,63,94,0.2)";
+    ansBox.style.background = "rgba(244,63,94,0.12)";
+    ansBox.style.color = "#fda4af";
+    ansBox.innerHTML = "✗ Not quite — click 'Show Wordplay / Step-by-Step Hint 💡' above to see the trick!";
+  }
+}
+
+function resetExam() {
+  examScore = 0;
+  examAnswered.clear();
+  document.getElementById("live-score").innerText = "AP Exam Score: 0 / 12";
+  buildExam();
+}
+buildExam();
+
+// STEP 5: WORDPLAY + PACKET REFERENCE
+const refItems = [
+  ["💡 Immigration vs. Emigration", "<b>I</b>mmigration = <b>I</b>N (+). <b>E</b>migration = <b>E</b>XIT (-)."],
+  ["💡 Population vs. Community", "<b>POP</b>ulation = <b>ONE</b> soda pop flavor (1 species). <b>COM</b>munity = <b>COM</b>bo pack (ALL species)."],
+  ["💡 Clumped / Uniform / Random", "<b>CLU</b>mped = <b>CLU</b>b/herds (fish). <b>UNI</b>form = <b>UNI</b>form soldiers (penguins). <b>RAN</b>dom = <b>RAN</b>dom wind (dandelions)."],
+  ["💡 Density-Dependent vs. Independent (Worksheet Q7 Fix!)", "<b>D</b>ependent = <b>D</b>inner (food) &amp; <b>D</b>isease in a <b>D</b>ense crowd. <b>I</b>ndependent = <b>I</b>ce storm / <b>I</b>nferno (wildfire) — hits any size equally!"],
+  ["💡 Carrying Capacity (K) &amp; S-Curve", "<b>K</b> = The <b>K</b>ing's <b>K</b>ap (ceiling). <b>S</b>-curve = <b>S</b>lows down and <b>S</b>tops at K (fastest growth is right in the middle at <b>K/2</b>!)."],
+  ["💡 Overshoot &amp; Die-Off (Fig 19.4)", "<b>OVER</b>shoot = <b>OVER</b>ate the pantry due to pregnancy time lag → <b>DIE-OFF</b> = starvation crash."],
+  ["💡 K-Selected vs. r-Selected", "<b>K</b> = <b>K</b>ing-sized (Elephants/Humans) who <b>K</b>are for few babies (Type I). <b>r</b> = <b>r</b>apid <b>r</b>ats/<b>r</b>oaches/weeds with thousands of babies (Type III — <b>survives environmental change best!</b>)."],
+  ["💡 Metapopulation &amp; Corridor", "<b>META</b> = <b>M</b>any patches linked by a <b>CORRIDOR</b> (bridge) so cousins don't marry (<b>Inbreeding Depression</b>)."]
+];
+const refDiv = document.getElementById("ref-list");
+refItems.forEach(([t, d]) => {
+  const c = document.createElement("div");
+  c.className = "q-card";
+  c.innerHTML = `<div class="q-title" style="color:var(--sky)">${t}</div><div style="font-size:14px;color:#e2e8f0;">${d}</div>`;
+  refDiv.appendChild(c);
+});
+
+function switchTab(id, btn) {
+  document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-tabs .tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+</script>
+</body>
+</html>

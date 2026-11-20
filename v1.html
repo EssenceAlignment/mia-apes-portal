@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AP Environmental Science — Chapter 6 Visual Mastery Engine (Modules 18 & 19)</title>
+<style>
+  :root {
+    --bg: #0b1120;
+    --panel: #111827;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --emerald: #10b981;
+    --sky: #38bdf8;
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --violet: #a855f7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    background: radial-gradient(circle at top right, #1e293b 0%, #0b1120 65%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    line-height: 1.5;
+  }
+  .hero {
+    background: linear-gradient(135deg, rgba(16,185,129,0.16), rgba(56,189,248,0.14));
+    border: 1px solid rgba(56,189,248,0.35);
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  .hero h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: -0.02em; }
+  .hero p { margin: 0; color: #cbd5e1; font-size: 14px; }
+  .countdown-pill {
+    background: #0f172a; border: 1px solid var(--emerald);
+    padding: 12px 18px; border-radius: 12px; text-align: right;
+  }
+  .countdown-pill .big { font-size: 20px; font-weight: 800; color: var(--emerald); }
+  .countdown-pill .small { font-size: 12px; color: var(--muted); }
+
+  .nav-tabs {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px;
+  }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 18px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--sky); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #0284c7, #059669);
+    border-color: #38bdf8; color: #fff;
+    box-shadow: 0 6px 20px rgba(2,132,199,0.35);
+  }
+
+  .section-pane { display: none; }
+  .section-pane.active { display: block; }
+
+  .info-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 18px;
+  }
+  @media (max-width: 960px) { .info-grid { grid-template-columns: 1fr; } }
+
+  .vcard {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  }
+  .vcard-tag {
+    display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; margin-bottom: 8px;
+  }
+  .tag-m18 { background: rgba(56,189,248,0.18); color: var(--sky); border: 1px solid rgba(56,189,248,0.4); }
+  .tag-m19 { background: rgba(16,185,129,0.18); color: var(--emerald); border: 1px solid rgba(16,185,129,0.4); }
+  .tag-trap { background: rgba(244,63,94,0.18); color: var(--rose); border: 1px solid rgba(244,63,94,0.4); }
+
+  .vcard h2 { margin: 4px 0 8px; font-size: 18px; }
+  .vcard p.lead { margin: 0 0 14px; color: #cbd5e1; font-size: 13.5px; }
+
+  .svg-box {
+    background: #0f172a; border: 1px solid #1e293b; border-radius: 12px;
+    padding: 14px; margin-bottom: 14px; text-align: center;
+  }
+  svg { width: 100%; height: auto; max-height: 270px; overflow: visible; }
+
+  .key-takeaway {
+    background: rgba(16,185,129,0.1); border-left: 4px solid var(--emerald);
+    padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #e2e8f0;
+  }
+  .exam-trap {
+    background: rgba(244,63,94,0.1); border-left: 4px solid var(--rose);
+    padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px; color: #fecdd3; margin-top: 10px;
+  }
+
+  /* Comparison Table */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  .cmp-table th, .cmp-table td {
+    border: 1px solid var(--border); padding: 9px 12px; text-align: left;
+  }
+  .cmp-table th { background: #0f172a; color: var(--sky); }
+  .cmp-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+  /* Reading Guide Q&A Cards */
+  .qa-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 14px;
+  }
+  .qa-q { font-weight: 700; font-size: 15px; color: var(--sky); margin-bottom: 8px; }
+  .qa-a { font-size: 14px; color: #f1f5f9; }
+  .qa-check {
+    margin-top: 8px; font-size: 12.5px; color: var(--emerald);
+    background: rgba(16,185,129,0.1); padding: 6px 10px; border-radius: 6px;
+  }
+
+  /* Flashcards Grid */
+  .fc-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;
+  }
+  .fc-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; cursor: pointer; transition: 0.2s; min-height: 150px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .fc-item:hover { transform: translateY(-2px); border-color: var(--emerald); }
+  .fc-term { font-size: 16px; font-weight: 800; color: var(--sky); }
+  .fc-def { font-size: 13px; color: #e2e8f0; margin-top: 8px; display: none; }
+  .fc-item.flipped { background: #0f172a; border-color: var(--emerald); }
+  .fc-item.flipped .fc-def { display: block; }
+  .fc-hint { font-size: 11px; color: var(--muted); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <h1>AP Environmental Science — Chapter 6 Visual Mastery Engine</h1>
+    <p>Unit 3: Population & Community Ecology (Modules 18 & 19) • Visual Infographics, Interactive Graphs & Complete Reading Guide Blueprint</p>
+  </div>
+  <div class="countdown-pill">
+    <div class="big">TARGET: TEST #2 — FRI NOV 6</div>
+    <div class="small">9-Day Visual Systems Sprint • 100% College Board Aligned</div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showPane('infographics', this)">1. Visual Infographics & Core Graphs (The 6 Mental Pictures)</button>
+  <button class="tab-btn" onclick="showPane('reading-guide', this)">2. Mia's Reading Guide Blueprint (Modules 18 & 19 Q&A)</button>
+  <button class="tab-btn" onclick="showPane('flashcards', this)">3. 30-Term Visual Vocabulary Deck (Click to Flip)</button>
+  <button class="tab-btn" onclick="showPane('quiz', this)">4. College Board Visual Curve-Reading Check (10 MCQs)</button>
+  <button class="tab-btn" onclick="showPane('plan', this)">5. 9-Day Nov 6 Mastery Gameplan</button>
+</div>
+
+<!-- PANE 1: VISUAL INFOGRAPHICS -->
+<div class="section-pane active" id="infographics">
+  <div class="info-grid">
+
+    <!-- INFOGRAPHIC 1: ECOLOGICAL HIERARCHY & NEW ENGLAND STORY -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m18">Module 18 • Opening Story & Q1–Q3</span>
+      <h2>1. Population vs. Community + The New England Forest Story</h2>
+      <p class="lead">Why did abandoned New England farms turn into goldenrod fields, then white pines, then broadleaf trees?</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 220">
+          <!-- Concentric Nested Rings -->
+          <rect x="10" y="15" width="220" height="190" rx="14" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+          <text x="24" y="38" fill="#d8b4fe" font-size="12" font-weight="bold">ECOSYSTEM (Biotic + Abiotic: Soil/Sun)</text>
+
+          <rect x="26" y="50" width="188" height="142" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="38" y="72" fill="#38bdf8" font-size="12" font-weight="bold">COMMUNITY (All Interacting Species)</text>
+          <text x="38" y="90" fill="#94a3b8" font-size="11">Goldenrod + Insects + Pines + Deer</text>
+
+          <rect x="44" y="104" width="152" height="76" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+          <text x="56" y="128" fill="#6ee7b7" font-size="12" font-weight="bold">POPULATION (1 Species)</text>
+          <text x="56" y="146" fill="#d1fae5" font-size="11">Same species, same area,</text>
+          <text x="56" y="162" fill="#d1fae5" font-size="11">same time (interbreeding)</text>
+
+          <!-- Timeline on Right: New England Farmland -->
+          <text x="255" y="32" fill="#f8fafc" font-size="12" font-weight="bold">New England Abandoned Farm Timeline:</text>
+          <g transform="translate(255, 45)">
+            <rect x="0" y="0" width="230" height="34" rx="6" fill="#1e293b" stroke="#f59e0b"/>
+            <text x="10" y="21" fill="#fde68a" font-size="11">1. Cleared Farm Abandoned → Weeds &amp; Goldenrod</text>
+
+            <rect x="0" y="44" width="230" height="34" rx="6" fill="#1e293b" stroke="#10b981"/>
+            <text x="10" y="65" fill="#a7f3d0" font-size="11">2. White Pines Grow → Shade Out Goldenrod</text>
+
+            <rect x="0" y="88" width="230" height="34" rx="6" fill="#1e293b" stroke="#38bdf8"/>
+            <text x="10" y="109" fill="#bae6fd" font-size="11">3. Broadleaf Oaks/Maples → Replace Pines</text>
+
+            <rect x="0" y="132" width="230" height="34" rx="6" fill="#1e293b" stroke="#f43f5e"/>
+            <text x="10" y="153" fill="#fecdd3" font-size="11">Lesson: Species interactions drive change!</text>
+          </g>
+        </svg>
+      </div>
+      <div class="key-takeaway">
+        <b>Visual Memory Hook:</b> You cannot understand why goldenrod disappeared by only studying goldenrod! You need <b>Community-Level Ecology</b> because taller trees shaded it out and insects ate it.
+      </div>
+    </div>
+
+    <!-- INFOGRAPHIC 2: POPULATION AS A SYSTEM (INPUTS vs OUTPUTS) -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m18">Module 18 • Question 4 &amp; Distribution</span>
+      <h2>2. Population as a Bathtub System + Spatial Distribution</h2>
+      <p class="lead">Think of Population Size (<i>N</i>) like water in a bathtub: 2 faucets add individuals (+), 2 drains remove them (-).</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 220">
+          <!-- Inputs -->
+          <rect x="15" y="20" width="135" height="42" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+          <text x="25" y="45" fill="#6ee7b7" font-size="12" font-weight="bold">+ Births (Natality)</text>
+
+          <rect x="15" y="75" width="135" height="42" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+          <text x="25" y="100" fill="#6ee7b7" font-size="12" font-weight="bold">+ Immigration (In)</text>
+
+          <!-- Arrows In -->
+          <line x1="150" y1="41" x2="185" y2="60" stroke="#10b981" stroke-width="3"/>
+          <line x1="150" y1="96" x2="185" y2="78" stroke="#10b981" stroke-width="3"/>
+
+          <!-- Center Tank -->
+          <rect x="188" y="32" width="124" height="74" rx="12" fill="#1e293b" stroke="#38bdf8" stroke-width="3"/>
+          <text x="250" y="64" text-anchor="middle" fill="#38bdf8" font-size="14" font-weight="bold">POPULATION</text>
+          <text x="250" y="84" text-anchor="middle" fill="#f8fafc" font-size="13" font-weight="bold">SIZE (N)</text>
+
+          <!-- Arrows Out -->
+          <line x1="312" y1="60" x2="348" y2="41" stroke="#f43f5e" stroke-width="3"/>
+          <line x1="312" y1="78" x2="348" y2="96" stroke="#f43f5e" stroke-width="3"/>
+
+          <!-- Outputs -->
+          <rect x="350" y="20" width="135" height="42" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="2"/>
+          <text x="360" y="45" fill="#fda4af" font-size="12" font-weight="bold">- Deaths (Mortality)</text>
+
+          <rect x="350" y="75" width="135" height="42" rx="8" fill="#4c0519" stroke="#f43f5e" stroke-width="2"/>
+          <text x="360" y="100" fill="#fda4af" font-size="12" font-weight="bold">- Emigration (Exit)</text>
+
+          <!-- 3 Spatial Distributions at Bottom -->
+          <g transform="translate(20, 135)">
+            <rect x="0" y="0" width="140" height="72" rx="8" fill="#111827" stroke="#475569"/>
+            <text x="70" y="18" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold">RANDOM (Trees/Seeds)</text>
+            <circle cx="25" cy="40" r="4" fill="#38bdf8"/><circle cx="65" cy="55" r="4" fill="#38bdf8"/>
+            <circle cx="90" cy="35" r="4" fill="#38bdf8"/><circle cx="115" cy="58" r="4" fill="#38bdf8"/>
+            <circle cx="45" cy="32" r="4" fill="#38bdf8"/>
+
+            <rect x="160" y="0" width="140" height="72" rx="8" fill="#111827" stroke="#475569"/>
+            <text x="230" y="18" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold">UNIFORM (Penguins)</text>
+            <circle cx="185" cy="36" r="4" fill="#f59e0b"/><circle cx="215" cy="36" r="4" fill="#f59e0b"/><circle cx="245" cy="36" r="4" fill="#f59e0b"/><circle cx="275" cy="36" r="4" fill="#f59e0b"/>
+            <circle cx="185" cy="56" r="4" fill="#f59e0b"/><circle cx="215" cy="56" r="4" fill="#f59e0b"/><circle cx="245" cy="56" r="4" fill="#f59e0b"/><circle cx="275" cy="56" r="4" fill="#f59e0b"/>
+
+            <rect x="320" y="0" width="140" height="72" rx="8" fill="#111827" stroke="#475569"/>
+            <text x="390" y="18" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="bold">CLUMPED (Fish/Herds)</text>
+            <circle cx="350" cy="40" r="4" fill="#10b981"/><circle cx="358" cy="45" r="4" fill="#10b981"/><circle cx="348" cy="49" r="4" fill="#10b981"/>
+            <circle cx="420" cy="50" r="4" fill="#10b981"/><circle cx="428" cy="54" r="4" fill="#10b981"/><circle cx="422" cy="59" r="4" fill="#10b981"/>
+          </g>
+        </svg>
+      </div>
+      <div class="key-takeaway">
+        <b>Memory Trick:</b> <b>I</b>mmigration = <b>I</b>n (+). <b>E</b>migration = <b>E</b>xit (-). Formula: $\Delta N = (\text{Births} + \text{Immigration}) - (\text{Deaths} + \text{Emigration})$.
+      </div>
+    </div>
+
+    <!-- INFOGRAPHIC 3: J-CURVE vs S-CURVE + OVERSHOOT & DIE-OFF (FIG 19.4) -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m19">Module 19 • Questions 1–4 &amp; Figure 19.4</span>
+      <h2>3. J-Curve (Exponential) vs. S-Curve (Logistic) + Overshoot &amp; Die-Off</h2>
+      <p class="lead">What happens when unlimited growth hits a ceiling (Carrying Capacity <i>K</i>)?</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 240">
+          <!-- Axes -->
+          <line x1="50" y1="200" x2="470" y2="200" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="50" y1="20" x2="50" y2="200" stroke="#94a3b8" stroke-width="2"/>
+          <text x="260" y="225" text-anchor="middle" fill="#cbd5e1" font-size="12">Time →</text>
+          <text x="18" y="115" transform="rotate(-90 18,115)" text-anchor="middle" fill="#cbd5e1" font-size="12">Population Size (N)</text>
+
+          <!-- Carrying Capacity K Line -->
+          <line x1="50" y1="85" x2="470" y2="85" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,5"/>
+          <text x="355" y="77" fill="#fbbf24" font-size="12" font-weight="bold">Carrying Capacity (K)</text>
+
+          <!-- J-Curve (Exponential) -->
+          <path d="M 55 190 Q 150 185 210 25" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+          <text x="140" y="42" fill="#38bdf8" font-size="12" font-weight="bold">J-Curve (Exponential)</text>
+          <text x="140" y="56" fill="#94a3b8" font-size="10">Unlimited resources (at r)</text>
+
+          <!-- Smooth S-Curve (Ideal Logistic) -->
+          <path d="M 55 190 C 140 185, 170 85, 460 85" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4,3"/>
+          <text x="360" y="104" fill="#6ee7b7" font-size="11">Ideal S-Curve (Logistic)</text>
+
+          <!-- Real Population Oscillating with Overshoot & Die-off (Fig 19.4) -->
+          <path d="M 55 190 C 130 185, 165 120, 215 45 C 245 20, 265 135, 295 130 C 325 125, 345 65, 380 75 C 410 85, 435 95, 465 83" fill="none" stroke="#f43f5e" stroke-width="3"/>
+          <circle cx="226" cy="40" r="5" fill="#f43f5e"/>
+          <text x="235" y="36" fill="#fda4af" font-size="11" font-weight="bold">OVERSHOOT (Exceeds K)</text>
+
+          <circle cx="285" cy="130" r="5" fill="#f43f5e"/>
+          <text x="245" y="152" fill="#fda4af" font-size="11" font-weight="bold">DIE-OFF (Crash)</text>
+        </svg>
+      </div>
+      <div class="key-takeaway">
+        <b>Why doesn't the red line stay flat at <i>K</i> (Module 19, Q2–Q4)?</b> Because there is a <b>time lag</b>! Even when food starts running low near <i>K</i>, animals that are already pregnant still give birth, causing an <b>Overshoot</b> above <i>K</i>, followed by starvation (**Die-off**) and oscillation around <i>K</i>.
+      </div>
+    </div>
+
+    <!-- INFOGRAPHIC 4: SURVIVORSHIP CURVES (TYPE I, II, III) + r vs K -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m19">Module 19 • Questions 6–7 &amp; Vocab 10–15</span>
+      <h2>4. Type I, II, III Survivorship Curves &amp; <i>K</i> vs. <i>r</i> Species</h2>
+      <p class="lead">When in life do individuals die? This single graph links directly to <i>K</i>-selected vs. <i>r</i>-selected traits.</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 230">
+          <line x1="55" y1="195" x2="465" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="55" y1="20" x2="55" y2="195" stroke="#94a3b8" stroke-width="2"/>
+          <text x="260" y="218" text-anchor="middle" fill="#cbd5e1" font-size="12">Relative Age (Young → Old)</text>
+          <text x="20" y="110" transform="rotate(-90 20,110)" text-anchor="middle" fill="#cbd5e1" font-size="12">% Survivors (Log Scale)</text>
+
+          <!-- Type I -->
+          <path d="M 55 30 C 310 30, 390 45, 455 195" fill="none" stroke="#10b981" stroke-width="3.5"/>
+          <text x="275" y="48" fill="#6ee7b7" font-size="12" font-weight="bold">Type I (Late Loss — K-Selected)</text>
+          <text x="275" y="63" fill="#94a3b8" font-size="11">Humans, Elephants, Whales (High parental care)</text>
+
+          <!-- Type II -->
+          <line x1="55" y1="30" x2="455" y2="195" stroke="#f59e0b" stroke-width="3"/>
+          <text x="215" y="112" fill="#fde68a" font-size="12" font-weight="bold">Type II (Constant Loss)</text>
+          <text x="215" y="126" fill="#94a3b8" font-size="11">Songbirds, Squirrels, Lizards</text>
+
+          <!-- Type III -->
+          <path d="M 55 30 C 70 175, 120 190, 455 195" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+          <text x="115" y="168" fill="#38bdf8" font-size="12" font-weight="bold">Type III (Early Loss — r-Selected)</text>
+          <text x="115" y="182" fill="#94a3b8" font-size="11">Dandelions, Mosquitoes, Oysters, Sea Turtles</text>
+        </svg>
+      </div>
+      <table class="cmp-table">
+        <tr><th>Feature</th><th><i>K</i>-Selected (Stay near Carrying Capacity <i>K</i>)</th><th><i>r</i>-Selected (High Intrinsic Growth Rate <i>r</i>)</th></tr>
+        <tr><td><b>Offspring &amp; Care</b></td><td>Few, large offspring; <b>high parental care</b></td><td>Thousands of tiny offspring; <b>little/no care</b></td></tr>
+        <tr><td><b>Survivorship Curve</b></td><td><b>Type I</b> (most survive to old age)</td><td><b>Type III</b> (most die young)</td></tr>
+        <tr><td><b>Environmental Change (Q6)</b></td><td>Vulnerable to sudden change &amp; invasive species</td><td><b>Better able to survive change!</b> (Fast reproduction + quick adaptation)</td></tr>
+      </table>
+    </div>
+
+    <!-- INFOGRAPHIC 5: PREDATOR-PREY CYCLES (FIG 19.5) -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m19">Module 19 • Question 5 (Figure 19.5)</span>
+      <h2>5. Coupled Predator-Prey Cycles (Lynx &amp; Hare / Wolves &amp; Moose)</h2>
+      <p class="lead">Notice how the Predator peak ALWAYS follows slightly behind the Prey peak!</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 200">
+          <line x1="45" y1="175" x2="470" y2="175" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="45" y1="20" x2="45" y2="175" stroke="#94a3b8" stroke-width="2"/>
+          <!-- Prey Wave (Higher & Earlier) -->
+          <path d="M 50 140 Q 95 20 140 140 T 230 140 T 320 140 T 410 140" fill="none" stroke="#10b981" stroke-width="3"/>
+          <!-- Predator Wave (Lagging behind to the right) -->
+          <path d="M 75 155 Q 120 65 165 155 T 255 155 T 345 155 T 435 155" fill="none" stroke="#f43f5e" stroke-width="3" stroke-dasharray="5,3"/>
+          <text x="80" y="38" fill="#6ee7b7" font-size="12" font-weight="bold">— Prey (Moose / Hare) Peaks First</text>
+          <text x="250" y="65" fill="#fda4af" font-size="12" font-weight="bold">--- Predator (Wolf / Lynx) Lags Behind</text>
+        </svg>
+      </div>
+      <div class="key-takeaway">
+        <b>The 4-Step Loop (Q5):</b> (1) More Prey = more food for Predators → (2) Predator population rises → (3) More Predators eat too many Prey, so Prey crashes → (4) Predators starve and crash → Prey recovers and the cycle repeats!
+      </div>
+    </div>
+
+    <!-- INFOGRAPHIC 6: METAPOPULATIONS, CORRIDORS & DENSITY FACTORS -->
+    <div class="vcard">
+      <span class="vcard-tag tag-m18">Modules 18 &amp; 19 • Density Factors &amp; Metapopulations</span>
+      <h2>6. Metapopulations, Habitat Corridors &amp; Density Factors</h2>
+      <p class="lead">Why connected habitat patches prevent <b>Inbreeding Depression</b> and extinction.</p>
+      <div class="svg-box">
+        <svg viewBox="0 0 500 200">
+          <!-- Patch A -->
+          <circle cx="95" cy="95" r="55" fill="#064e3b" stroke="#10b981" stroke-width="2.5"/>
+          <text x="95" y="90" text-anchor="middle" fill="#a7f3d0" font-size="12" font-weight="bold">Sub-Population A</text>
+          <text x="95" y="108" text-anchor="middle" fill="#d1fae5" font-size="10">(Large Gene Pool)</text>
+
+          <!-- Habitat Corridor Bridge -->
+          <rect x="148" y="80" width="115" height="30" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="205" y="99" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="bold">Habitat Corridor ↔</text>
+
+          <!-- Patch B -->
+          <circle cx="310" cy="95" r="48" fill="#064e3b" stroke="#10b981" stroke-width="2.5"/>
+          <text x="310" y="90" text-anchor="middle" fill="#a7f3d0" font-size="12" font-weight="bold">Sub-Population B</text>
+          <text x="310" y="108" text-anchor="middle" fill="#d1fae5" font-size="10">(Connected)</text>
+
+          <!-- Isolated Patch C (Inbreeding Depression) -->
+          <circle cx="435" cy="95" r="42" fill="#4c0519" stroke="#f43f5e" stroke-width="2.5"/>
+          <text x="435" y="88" text-anchor="middle" fill="#fda4af" font-size="11" font-weight="bold">Isolated Patch</text>
+          <text x="435" y="104" text-anchor="middle" fill="#fecdd3" font-size="9.5">Inbreeding Depression!</text>
+        </svg>
+      </div>
+      <div class="exam-trap">
+        <b>EXAM TRAP fixed on Mia's Worksheet (Module 18, Q7):</b><br>
+        • <b>Density-DEPENDENT Factors</b> depend on how crowded it is: <b>Food, water, nesting sites, disease, parasites, predation</b>.<br>
+        • <b>Density-INDEPENDENT Factors</b> hit regardless of crowding (usually weather/disasters): <b>Tornadoes, hurricanes, wildfires, droughts, freezes</b>.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PANE 2: MIA'S READING GUIDE COMPLETE BLUEPRINT -->
+<div class="section-pane" id="reading-guide">
+  <h2 style="margin-top:0;">Complete Visual Answer Key &amp; Upgrade for Mia's Scanned Packet (Modules 18 &amp; 19)</h2>
+  <p style="color:var(--muted);margin-bottom:18px;">Includes verification of Mia's handwritten answers on Page 2 + clear, high-scoring explanations for every blank question.</p>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q1: Opening Story — What happened after the New England farmland was abandoned, and what does this demonstrate?</div>
+    <div class="qa-a">After farmers abandoned cleared New England fields in the 1800s, the bare fields first filled with fast-growing weeds and <b>goldenrod</b> (<i>r</i>-selected), then were shaded out by <b>eastern white pines</b>, and eventually became mature <b>broadleaf forests</b> (oaks and maples). This demonstrates that populations and communities are dynamic—species constantly interact and alter their environment over time (ecological succession).</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q2: What defines "a population", and how is it different from a community?</div>
+    <div class="qa-a">A <b>population</b> is composed of all individuals that belong to the <b>same species</b> and live in a given area at a particular time. A <b>community</b> incorporates <b>all of the interacting populations of different species</b> (plants, animals, fungi, bacteria) within that given area.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q3: How does the opening story demonstrate the importance of community-level analysis of ecology?</div>
+    <div class="qa-a">If scientists only looked at the goldenrod population in isolation, they couldn't explain why goldenrod declined. Only by studying the <b>whole community</b>—how tall pines blocked sunlight and how herbivorous insects and competitors interacted with goldenrod—can we explain why populations rise and fall.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q4: When considering a population as a system, what 2 processes are inputs (+) and what 2 processes are outputs (-)?</div>
+    <div class="qa-a">
+      • <b>Input 1 (+):</b> Births (Natality)<br>
+      • <b>Input 2 (+):</b> Immigration (individuals moving <i>into</i> the population)<br>
+      • <b>Output 1 (-):</b> Deaths (Mortality)<br>
+      • <b>Output 2 (-):</b> Emigration (individuals moving <i>out of</i> the population)
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q5: Why is it important to know the population sex ratio and age structure?</div>
+    <div class="qa-a">Both help ecologists predict <b>how fast a population will grow in the future</b>. The <b>sex ratio</b> (especially the number of females) determines how many offspring can be produced in the next generation. The <b>age structure</b> shows what fraction of the population is pre-reproductive, reproductive, or post-reproductive—a population with many young individuals will grow rapidly.</div>
+    <div class="qa-check">✓ Mia's Handwritten Answer Check: Spot on! Mia wrote that sex ratio helps scientists estimate the number of offspring produced in the next generation, and age structure describes how fast a population can grow.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q6: How can increasing population density act to limit that population's growth?</div>
+    <div class="qa-a">As population density increases (more individuals packed into the same area), competition for <b>limiting resources</b> (food, water, light, nest sites) intensifies, waste builds up, predators are attracted to the abundant prey, and <b>infectious diseases/parasites spread much faster</b>—raising death rates and lowering birth rates.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q7: How do density-dependent and density-independent factors affect a population's size? Provide examples of each.</div>
+    <div class="qa-a">
+      • <b>Density-Dependent Factors:</b> Influence an individual's probability of survival and reproduction in a manner that <b>depends on the size/density of the population</b> (worse when crowded). <i>Examples:</i> Limited food supply, infectious disease, parasites, predation, territorial nesting space.<br>
+      • <b>Density-Independent Factors:</b> Have the <b>same effect on an individual's probability of survival at any population size</b> (does not care how crowded it is). <i>Examples:</i> Tornadoes, hurricanes, floods, wildfires, volcanic eruptions, extreme freezes.
+    </div>
+    <div class="qa-check" style="color:#fbbf24;background:rgba(245,158,11,0.12);">⚠ Important Upgrade for Mia's Q7 Blank: On her worksheet, Mia wrote the definition of "population density" (estimating if a species is rare or abundant). Make sure she adds the contrast between <b>Density-Dependent (food/disease)</b> vs. <b>Density-Independent (weather/natural disasters)</b>—this is a guaranteed test question!</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q8: What are typical limiting resources for plants? For animals?</div>
+    <div class="qa-a">
+      • <b>For Terrestrial Plants:</b> Water, sunlight, space, and soil nutrients (especially <b>nitrogen and phosphorus</b>).<br>
+      • <b>For Animals:</b> Food, water, shelter, and <b>nesting/breeding sites</b>.
+    </div>
+    <div class="qa-check">✓ Mia's Handwritten Answer Check: 100% correct! She nailed water, nitrogen, and phosphorus for plants, and food, water, and nest sites for animals.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 18, Q9: What is the relationship between limiting factors for a population and its environment's carrying capacity?</div>
+    <div class="qa-a"><b>Limiting resources directly determine the carrying capacity (<i>K</i>)!</b> The scarcest limiting resource sets the maximum ceiling (<i>K</i>) on how many individuals that environment can sustainably support. If a limiting resource increases (e.g., more food or rainfall), carrying capacity (<i>K</i>) increases; if it decreases, <i>K</i> drops.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q1: What does the intrinsic growth rate (<i>r</i>) of a species measure? How does it vary among species (<i>r</i> vs. <i>K</i> selection)?</div>
+    <div class="qa-a">The <b>intrinsic growth rate (<i>r</i>)</b> is the <b>maximum potential rate for growth of a population under ideal conditions with unlimited resources</b>. It varies dramatically by life-history strategy: small, short-lived <b><i>r</i>-selected species</b> (like mice, insects, dandelions) have a <b>very high <i>r</i></b>, while large, long-lived <b><i>K</i>-selected species</b> (like elephants, whales, humans) have a <b>low <i>r</i></b>.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q2: What occurs in logistic growth when a growing population approaches the carrying capacity (<i>K</i>)?</div>
+    <div class="qa-a">As the population approaches carrying capacity (<i>K</i>), limiting resources become scarce, so the <b>growth rate slows down (decelerates)</b> until births equal deaths and population growth levels off near <b>zero</b> (forming the flat top of the <b>S-shaped curve</b>).</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q3: Can populations exceed carrying capacity in the short term? In the long term? What happens if they do?</div>
+    <div class="qa-a">
+      • <b>Short Term: YES</b> (called an <b>Overshoot</b>), because of reproductive time lag (offspring conceived when food was plentiful are born after resources run low).<br>
+      • <b>Long Term: NO</b>, because the environment lacks enough food/resources to sustain the excess population, triggering a rapid population crash called a <b>Die-off</b> (starvation, disease, emigration).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q4: In Figure 19.4, why doesn't the population stay steady at the level of the carrying capacity?</div>
+    <div class="qa-a">Because of <b>time delays in how populations respond to resource changes</b> and environmental fluctuations. The population overshoots <i>K</i>, overgrazes/depletes its food, crashes below <i>K</i> (die-off), allows vegetation to recover, and then rebounds—creating <b>oscillations around carrying capacity</b> rather than a flat line.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q5: How do predator-prey dynamics influence the populations of BOTH predators and prey? (Figure 19.5)</div>
+    <div class="qa-a">They lock both species into <b>coupled oscillations</b>: when prey numbers rise, predators have abundant food and their population grows after a brief time lag. Increased predation then drives prey numbers down, causing predators to starve and decline, which in turn allows the prey population to recover and repeat the cycle.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q6: Which types of species are better able to survive environmental change — <i>r</i>- or <i>K</i>-selected? Explain.</div>
+    <div class="qa-a"><b><i>r</i>-selected species are much better able to survive rapid environmental change!</b> Because they reproduce quickly, have short generation times, produce huge numbers of offspring, and disperse widely, they can rapidly colonize disturbed habitats and evolve/adapt much faster than slow-breeding <i>K</i>-selected species.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q7: How do <i>r</i>- and <i>K</i>-selection influence survivorship curves?</div>
+    <div class="qa-a">
+      • <b><i>K</i>-selected species</b> invest heavily in parental care and protection of a few offspring, producing a <b>Type I survivorship curve</b> (high survival throughout youth/middle age; mortality concentrated in old age).<br>
+      • <b><i>r</i>-selected species</b> produce thousands of tiny offspring with little/no parental care, producing a <b>Type III survivorship curve</b> (massive early mortality; very few survive to adulthood).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q8: What is a metapopulation, and why is it important to study them?</div>
+    <div class="qa-a">A <b>metapopulation</b> is a group of <b>spatially distinct populations that are connected by occasional movements of individuals between them</b> (often via <b>habitat corridors</b>). Studying them is vital because human habitat fragmentation chops ecosystems into isolated patches; connected metapopulations provide <b>genetic diversity</b> (preventing <b>inbreeding depression</b>) and allow individuals from healthy patches to recolonize patches where a local population died out.</div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-q">Module 19, Q9 &amp; Q10 (Science Applied): How can human action cause some species to become overabundant, why is it harmful, and how do control options differ?</div>
+    <div class="qa-a">
+      • <b>Q9 (Cause &amp; Harm):</b> Humans eliminate top predators (wolves, cougars), fragment forests into edge habitats, and provide abundant food/trash/crops—causing species like white-tailed deer, suburban geese, or rats to explode. This harms ecosystems by overgrazing forest understories, spreading Lyme disease, and causing car collisions.<br>
+      • <b>Q10 (Control Options):</b> In <b>rural areas</b>, regulated hunting or predator reintroduction works; in <b>urban/suburban areas</b>, hunting with firearms is unsafe, so cities use contraception/sterilization, trap-and-relocate, or sharp-shooters. <b>Wealthy countries</b> can afford costly wildlife fertility control and corridor engineering, whereas <b>poorer regions</b> rely more on physical barriers, community hunting, or low-cost habitat management.
+    </div>
+  </div>
+</div>
+
+<!-- PANE 3: 30-TERM VISUAL VOCABULARY DECK -->
+<div class="section-pane" id="flashcards">
+  <h2 style="margin-top:0;">Click Any Card to Flip — All 30 Terms from Mia's Module 18 &amp; 19 Vocabulary Table</h2>
+  <div class="fc-grid" id="fc-container"></div>
+</div>
+
+<!-- PANE 4: VISUAL QUIZ -->
+<div class="section-pane" id="quiz">
+  <h2 style="margin-top:0;">10-Question APES Visual Curve &amp; Concept Check</h2>
+  <div id="quiz-container"></div>
+</div>
+
+<!-- PANE 5: 9-DAY STUDY PLAN -->
+<div class="section-pane" id="plan">
+  <h2 style="margin-top:0;">Mia's 9-Day Visual Sprint to Friday, November 6 (20 Minutes/Day — Zero Audio Fluff)</h2>
+  <div class="info-grid">
+    <div class="vcard">
+      <span class="vcard-tag tag-m18">Phase 1: Days 1–3 (Oct 28–Oct 30)</span>
+      <h2>Lock the 6 Visual Pictures + Finish Module 18 &amp; 19 Packet</h2>
+      <p class="lead">• <b>Wed 10/28 – Thu 10/29:</b> Use Tab 2 of this hub to fill in the remaining blanks on the Chapter 6 Reading Guide in Mia's own words while looking at the 6 graphs in Tab 1.<br>• <b>Fri 10/30:</b> Scan Module 20 (Community Ecology: Competition, Predation, Mutualism, Commensalism, Succession) if it's on the Nov 6 test so we add a Module 20 visual tab!</p>
+    </div>
+    <div class="vcard">
+      <span class="vcard-tag tag-m19">Phase 2: Days 4–6 (Oct 31–Nov 2)</span>
+      <h2>Sketch-From-Memory Drill (The "Blank Paper" Trick)</h2>
+      <p class="lead">• Instead of re-reading notes, take a blank sheet of paper and draw in 3 minutes:<br>1. The J-curve vs. S-curve with carrying capacity (<i>K</i>), overshoot, and die-off.<br>2. Type I, II, and III survivorship curves with 1 animal example on each line.<br>3. The 4-box Bathtub diagram (+Births, +Immigration, -Deaths, -Emigration).</p>
+    </div>
+    <div class="vcard">
+      <span class="vcard-tag tag-trap">Phase 3: Days 7–9 (Nov 3–Nov 5)</span>
+      <h2>College Board Curve-Reading Practice Problems</h2>
+      <p class="lead">• APES tests don't just ask definitions—they give a graph (like Isle Royale wolves &amp; moose or reindeer on St. Matthew Island) and ask <i>"In what year did overshoot occur?"</i> or <i>"Which curve represents an oyster?"</i><br>• Do 10 visual MCQs per night on Nov 3, 4, and 5.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocab = [
+  ["1. Population (Mod 18)", "Individuals of the SAME species living in a particular area at the same time."],
+  ["2. Community (Mod 18)", "All of the populations of DIFFERENT species that live and interact in a particular area."],
+  ["3. Population Ecology (Mod 18)", "The study of factors that cause populations to increase or decrease."],
+  ["4. Population Size (N) (Mod 18)", "The total number of individuals within a defined area at a given time."],
+  ["5. Population Density (Mod 18)", "The number of individuals per unit area (terrestrial) or volume (aquatic)."],
+  ["6. Population Distribution (Mod 18)", "How individuals are spaced out across their range: Random, Uniform, or Clumped."],
+  ["7. Sex Ratio (Mod 18)", "The ratio of males to females in a population (helps predict future birth numbers)."],
+  ["8. Age Structure (Mod 18)", "A description of how many individuals fit into particular age categories (pre-reproductive, reproductive, post-reproductive)."],
+  ["9. Limiting Resource (Mod 18)", "A resource that a population cannot live without and that occurs in quantities lower than the population would require to increase in size."],
+  ["10. Density-Dependent Factor (Mod 18)", "A factor that influences survival/reproduction in a way that DEPENDS on how crowded the population is (e.g., food, disease, predation)."],
+  ["11. Carrying Capacity (K) (Mod 18)", "The limit of how many individuals in a population the environment's limiting resources can sustain."],
+  ["12. Density-Independent Factor (Mod 18)", "A factor that has the same effect on survival at ANY population density (e.g., tornadoes, hurricanes, wildfires, freezes)."],
+  ["13. Population Growth Models (Mod 19)", "Mathematical equations (Exponential and Logistic) used to predict population size at any moment in time."],
+  ["14. Population Growth Rate (Mod 19)", "The number of offspring an individual can produce in a given time period, minus the deaths of the individual or its offspring during the same period."],
+  ["15. Intrinsic Growth Rate (r) (Mod 19)", "The maximum potential for growth of a population under ideal conditions with unlimited resources."],
+  ["16. Exponential Growth Model (Mod 19)", "Growth model (Nt = N0 * e^(rt)) that estimates a population's future size when resources are unlimited and growth is at a fixed rate r."],
+  ["17. J-Shaped Curve (Mod 19)", "The curve of the exponential growth model when graphed (starts slow, then shoots straight up like a 'J')."],
+  ["18. Logistic Growth Model (Mod 19)", "A growth model that describes a population whose growth is initially exponential, but slows as the population approaches the carrying capacity (K)."],
+  ["19. S-Shaped Curve (Mod 19)", "The shape of the logistic growth model when graphed (accelerates, then flattens out at K)."],
+  ["20. Overshoot (Mod 19)", "When a population becomes larger than the environment's carrying capacity (K), usually due to reproductive time lag."],
+  ["21. Die-Off (Mod 19)", "A rapid decline in a population due to death (starvation/disease) after it overshoots carrying capacity."],
+  ["22. K-Selected Species (Mod 19)", "Species with a low intrinsic growth rate (r) that causes the population to increase slowly until it reaches carrying capacity (K). Large body, few offspring, high parental care (Elephants, Humans)."],
+  ["23. r-Selected Species (Mod 19)", "Species that have a high intrinsic growth rate (r), which often leads to population overshoots and die-offs. Small body, many tiny offspring, no parental care (Dandelions, Mice, Insects)."],
+  ["24. Survivorship Curves (Mod 19)", "Graphs that represent the distinct patterns of species survival as a function of age (Type I, Type II, Type III)."],
+  ["25. Type I Survivorship Curve (Mod 19)", "Pattern of survival in which there is high survival throughout most of the life span, but individuals start to die in large numbers as they approach old age (Humans, Elephants — K-selected)."],
+  ["26. Type II Survivorship Curve (Mod 19)", "Pattern of survival in which there is a relatively constant decline in survivorship throughout most of the life span (Songbirds, Squirrels, Coral)."],
+  ["27. Type III Survivorship Curve (Mod 19)", "Pattern of survival in which there is low survivorship early in life with few individuals reaching adulthood (Mosquitoes, Oysters, Dandelions — r-selected)."],
+  ["28. Corridor (Habitat Corridor) (Mod 19)", "Strips of natural habitat that connect separated populations (allowing migration and gene flow)."],
+  ["29. Metapopulation (Mod 19)", "A group of spatially distinct populations that are connected by occasional movements of individuals between them."],
+  ["30. Inbreeding Depression (Mod 19)", "When individuals with similar genotypes—typically relatives in a small, isolated population—breed with each other and produce offspring that have an impaired ability to survive and reproduce."]
+];
+
+const fcContainer = document.getElementById("fc-container");
+vocab.forEach(([term, def]) => {
+  const d = document.createElement("div");
+  d.className = "fc-item";
+  d.onclick = () => d.classList.toggle("flipped");
+  d.innerHTML = `<div class="fc-term">${term}</div><div class="fc-def">${def}</div><div class="fc-hint">Click to flip ↔</div>`;
+  fcContainer.appendChild(d);
+});
+
+const quizData = [
+  {q: "1. A late-spring freeze kills 80% of an insect population regardless of whether there were 100 or 100,000 insects per acre. This freeze is a:", opts: ["Density-dependent factor", "Density-independent factor", "Carrying capacity increase", "Type I survivorship factor"], a: 1, exp: "Weather events (freezes, tornadoes, droughts) affect survival regardless of population density = Density-Independent."},
+  {q: "2. On St. Matthew Island, 29 introduced reindeer grew to 6,000, ate all the slow-growing lichen, and then crashed to 42 individuals. The peak of 6,000 followed by the drop to 42 illustrates:", opts: ["Uniform distribution and inbreeding", "Overshoot followed by a die-off", "A Type I to Type II transition", "Density-independent equilibrium"], a: 1, exp: "Exceeding carrying capacity (K) is an Overshoot; the subsequent starvation crash is a Die-off."},
+  {q: "3. Which species is MOST likely to exhibit a Type III survivorship curve and r-selected traits?", opts: ["African elephant", "Bullfrog laying 10,000 unguarded eggs", "Human", "Blue whale"], a: 1, exp: "Bullfrogs, oysters, and dandelions produce thousands of offspring with no parental care and high early mortality (Type III / r-selected)."},
+  {q: "4. Territorial nesting seabirds (like gannets or penguins) that peck at neighbors within reach typically display which spatial distribution?", opts: ["Clumped", "Random", "Uniform", "Metapopulation"], a: 2, exp: "Territorial defense or chemical competition (allelopathy in desert shrubs) produces evenly spaced Uniform distribution."},
+  {q: "5. If a deer herd has 40 births, 15 deaths, 10 immigrants, and 5 emigrants in one year, what is the net change in population size (N)?", opts: ["+20", "+30", "+35", "+60"], a: 1, exp: "(Births 40 + Immigration 10) - (Deaths 15 + Emigration 5) = 50 - 20 = +30."},
+  {q: "6. Why are wildlife biologists building highway overpasses covered in trees and grass ('corridors') between fragmented mountain lion habitats?", opts: ["To increase density-independent mortality", "To connect metapopulations and prevent inbreeding depression", "To convert mountain lions into r-selected species", "To lower the carrying capacity (K)"], a: 1, exp: "Corridors allow gene flow between isolated subpopulations in a metapopulation, preventing inbreeding depression."},
+  {q: "7. As a population growing logistically (S-curve) gets very close to its carrying capacity (K), its growth rate:", opts: ["Reaches its maximum speed", "Slows down toward zero", "Becomes J-shaped", "Depends only on weather"], a: 1, exp: "In logistic growth, resource scarcity slows growth down until it levels off near 0 at K."},
+  {q: "8. In the Isle Royale wolf-and-moose graph (Figure 19.5), what happens shortly AFTER the moose (prey) population reaches a peak?", opts: ["The wolf (predator) population increases due to abundant food", "The moose population switches to a J-curve forever", "Both populations stop oscillating", "Moose become K-selected predators"], a: 0, exp: "Abundant prey provides food for predators, so the predator peak follows slightly behind the prey peak."},
+  {q: "9. If a wildfire destroys a forest, which group of species is best adapted to rapidly colonize the disturbed area first?", opts: ["K-selected species with long gestation periods", "r-selected species with high intrinsic growth rates (r) and fast dispersal", "Type I survivorship large mammals", "Species with severe inbreeding depression"], a: 1, exp: "r-selected species reproduce rapidly and disperse seeds/offspring quickly into disturbed habitats."},
+  {q: "10. What are the most common limiting resources for terrestrial plant populations?", opts: ["Nesting sites and shelter", "Water, sunlight, and soil nutrients (Nitrogen & Phosphorus)", "Predators and parasites", "Corridors and sex ratios"], a: 1, exp: "Plants compete for water, sunlight, and macronutrients like Nitrogen (N) and Phosphorus (P)."}
+];
+
+const qContainer = document.getElementById("quiz-container");
+quizData.forEach((item, idx) => {
+  const card = document.createElement("div");
+  card.className = "qa-card";
+  const optsHtml = item.opts.map((o, oIdx) => `
+    <button class="tab-btn" style="display:block;width:100%;text-align:left;margin-top:6px;font-weight:500;"
+      onclick="checkAns(${idx}, ${oIdx}, ${item.a}, this)">${String.fromCharCode(65+oIdx)}. ${o}</button>
+  `).join("");
+  card.innerHTML = `<div class="qa-q">${item.q}</div><div>${optsHtml}</div><div id="exp-${idx}" class="qa-check" style="display:none;"></div>`;
+  qContainer.appendChild(card);
+});
+
+function checkAns(qIdx, chosen, correct, btn) {
+  const expEl = document.getElementById("exp-" + qIdx);
+  expEl.style.display = "block";
+  if (chosen === correct) {
+    btn.style.borderColor = "#10b981";
+    btn.style.background = "rgba(16,185,129,0.2)";
+    expEl.style.color = "#6ee7b7";
+    expEl.innerHTML = "✓ Correct! " + quizData[qIdx].exp;
+  } else {
+    btn.style.borderColor = "#f43f5e";
+    btn.style.background = "rgba(244,63,94,0.2)";
+    expEl.style.color = "#fda4af";
+    expEl.innerHTML = "✗ Not quite — look at why: " + quizData[qIdx].exp;
+  }
+}
+
+function showPane(id, btn) {
+  document.querySelectorAll(".section-pane").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-tabs .tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+</script>
+</body>
+</html>

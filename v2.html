@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mia's APES Mastery Engine v2 — Wordplay Hooks + Brain-Dump Grader + Quiz Game</title>
+<style>
+  :root {
+    --bg: #0b1120; --panel: #111827; --card: #1e293b; --border: #334155;
+    --text: #f8fafc; --muted: #94a3b8;
+    --emerald: #10b981; --sky: #38bdf8; --amber: #f59e0b; --rose: #f43f5e; --violet: #a855f7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 22px;
+    background: radial-gradient(circle at top right, #1e293b 0%, #0b1120 70%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    line-height: 1.5;
+  }
+  .hero {
+    background: linear-gradient(135deg, rgba(168,85,247,0.18), rgba(56,189,248,0.15));
+    border: 1px solid rgba(168,85,247,0.45);
+    border-radius: 16px; padding: 20px 24px; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .hero h1 { margin: 0 0 4px; font-size: 23px; }
+  .hero p { margin: 0; color: #cbd5e1; font-size: 13.5px; }
+  .score-badge {
+    background: #0f172a; border: 1px solid var(--emerald);
+    padding: 10px 16px; border-radius: 12px; text-align: right;
+  }
+  .score-badge .big { font-size: 18px; font-weight: 800; color: var(--emerald); }
+  .score-badge .small { font-size: 11.5px; color: var(--muted); }
+
+  .nav-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--sky); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #7c3aed, #0284c7);
+    border-color: #a855f7; color: #fff;
+    box-shadow: 0 6px 18px rgba(124,58,237,0.35);
+  }
+
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* Wordplay Grid */
+  .wp-controls {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    gap: 12px; margin-bottom: 16px; background: #111827; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border);
+  }
+  .action-btn {
+    background: var(--emerald); color: #052e16; border: none; padding: 9px 16px;
+    border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer;
+  }
+  .action-btn.secondary { background: #334155; color: #f8fafc; }
+
+  .wp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+  .wp-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 18px; transition: 0.15s; position: relative;
+  }
+  .wp-card:hover { border-color: var(--violet); }
+  .wp-cat { font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: var(--sky); letter-spacing: 0.05em; }
+  .wp-term { font-size: 17px; font-weight: 800; margin: 4px 0 8px; color: #fff; }
+  .wp-hook {
+    background: rgba(168,85,247,0.16); border-left: 4px solid var(--violet);
+    padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 14px; color: #f3e8ff;
+    margin-bottom: 8px; cursor: pointer;
+  }
+  .wp-hook b { color: #fde047; }
+  .wp-meaning { font-size: 12.5px; color: #cbd5e1; }
+  .masked .wp-hook-text, .masked .wp-meaning { filter: blur(6px); user-select: none; }
+  .masked .wp-hook:hover .wp-hook-text { filter: blur(0); }
+
+  /* Brain Dump Grader */
+  .bd-layout { display: grid; grid-template-columns: 320px 1fr; gap: 18px; }
+  @media (max-width: 900px) { .bd-layout { grid-template-columns: 1fr; } }
+  .bd-topic-btn {
+    display: block; width: 100%; text-align: left; background: var(--card);
+    border: 1px solid var(--border); color: var(--text); padding: 12px 14px;
+    border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 700; font-size: 13px;
+  }
+  .bd-topic-btn.active { background: #1e1b4b; border-color: var(--violet); color: #e9d5ff; }
+  .bd-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  }
+  textarea.bd-input {
+    width: 100%; height: 150px; background: #0f172a; border: 1px solid #475569;
+    border-radius: 10px; color: #fff; padding: 14px; font-size: 14px; font-family: inherit;
+    margin: 12px 0; resize: vertical;
+  }
+  .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .kw-chip {
+    padding: 6px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 700;
+    background: #0f172a; border: 1px solid #475569; color: #94a3b8;
+  }
+  .kw-chip.hit { background: rgba(16,185,129,0.2); border-color: var(--emerald); color: #6ee7b7; }
+  .kw-chip.miss { background: rgba(244,63,94,0.18); border-color: var(--rose); color: #fda4af; }
+
+  /* Quiz Cards */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 14px;
+  }
+  .q-title { font-weight: 700; font-size: 15px; color: #f8fafc; margin-bottom: 8px; }
+  .q-opt {
+    display: block; width: 100%; text-align: left; background: #0f172a;
+    border: 1px solid #334155; color: #e2e8f0; padding: 10px 14px;
+    border-radius: 8px; margin-top: 6px; cursor: pointer; font-size: 13.5px;
+  }
+  .q-opt:hover { border-color: var(--sky); }
+  .hint-btn {
+    background: rgba(168,85,247,0.2); border: 1px solid var(--violet); color: #e9d5ff;
+    padding: 4px 10px; border-radius: 6px; font-size: 11.5px; cursor: pointer; margin-top: 8px;
+  }
+  .hint-box {
+    display: none; margin-top: 8px; padding: 8px 12px; border-radius: 6px;
+    background: rgba(168,85,247,0.12); color: #fde047; font-size: 12.5px;
+  }
+  .ans-box {
+    display: none; margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <h1>Mia's APES Mastery Engine v2 — "LAX" Wordplay + Brain-Dump Grader + Quiz Game</h1>
+    <p>Built around the 3 things that actually click for Mia: <b>1. Wordplay/Nameplay Hooks</b> • <b>2. Active Brain Dumping</b> • <b>3. Instant Quizzes</b></p>
+  </div>
+  <div class="score-badge">
+    <div class="big" id="live-score">Quiz Score: 0 / 20</div>
+    <div class="small">Test #2 Target: Friday, Nov 6</div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('wordplay', this)">1. "LAX-Style" Wordplay Hooks (Click to Test Yourself)</button>
+  <button class="tab-btn" onclick="switchTab('braindump', this)">2. Interactive Brain-Dump Grader (From Videos &amp; Notes)</button>
+  <button class="tab-btn" onclick="switchTab('quiz', this)">3. 20-Question APES Quiz + Wordplay Hints</button>
+  <button class="tab-btn" onclick="switchTab('packet', this)">4. Mia's Reading Guide Answer Key (Modules 18 &amp; 19)</button>
+</div>
+
+<!-- TAB 1: LAX-STYLE WORDPLAY HOOKS -->
+<div class="pane active" id="wordplay">
+  <div class="wp-controls">
+    <div>
+      <b>How to use this (No passive reading!):</b> Read the purple <b>Wordplay Hook</b> out loud once, then click <b>"Test Mode (Blur Answers)"</b> and see if the word itself triggers the hook in your head—just like the <b>LAX</b> moon trick!
+    </div>
+    <div>
+      <button class="action-btn" onclick="toggleMask()" id="mask-btn">Test Mode: Blur Answers</button>
+    </div>
+  </div>
+  <div class="wp-grid" id="wp-container"></div>
+</div>
+
+<!-- TAB 2: INTERACTIVE BRAIN-DUMP GRADER -->
+<div class="pane" id="braindump">
+  <div class="bd-layout">
+    <div id="bd-topics"></div>
+    <div class="bd-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;font-size:18px;" id="bd-title">Topic 1: Population Inputs, Outputs &amp; Spacing</h2>
+        <span style="font-size:12px;color:var(--sky);" id="bd-prompt-sub">Brain-dump everything you remember without looking at notes!</span>
+      </div>
+      <p style="color:#cbd5e1;font-size:13.5px;margin:8px 0;" id="bd-question"></p>
+      <textarea class="bd-input" id="bd-textarea" placeholder="Type everything you remember here (words, messy phrases, wordplay hooks—doesn't have to be full sentences)..."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="action-btn" onclick="gradeBrainDump()">Grade My Brain Dump ✓</button>
+        <button class="action-btn secondary" onclick="showAllKeywords()">Reveal All Target Keywords</button>
+        <button class="action-btn secondary" onclick="clearBrainDump()">Clear &amp; Try Again</button>
+      </div>
+      <div id="bd-result" style="margin-top:14px;font-weight:700;font-size:14px;"></div>
+      <div class="chip-wrap" id="bd-chips"></div>
+      <div id="bd-model" style="display:none;margin-top:14px;padding:12px;background:#0f172a;border-left:4px solid var(--emerald);border-radius:6px;font-size:13px;color:#e2e8f0;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: 20-QUESTION QUIZ WITH WORDPLAY HINTS -->
+<div class="pane" id="quiz">
+  <div class="wp-controls">
+    <div><b>Interactive Quiz Game:</b> Stuck on a question? Click the purple <b>"Show Wordplay Hint 💡"</b> button to trigger your memory hook before picking your answer!</div>
+    <button class="action-btn secondary" onclick="resetQuiz()">Reset Quiz Score</button>
+  </div>
+  <div id="quiz-list"></div>
+</div>
+
+<!-- TAB 4: PACKET BLUEPRINT -->
+<div class="pane" id="packet">
+  <div class="wp-controls">
+    <div><b>Mia's Scanned Chapter 6 Worksheet (Modules 18 &amp; 19):</b> Every question answered clearly + the Q7 Density-Dependent vs. Density-Independent fix.</div>
+  </div>
+  <div id="packet-list"></div>
+</div>
+
+<script>
+// 1. WORDPLAY HOOKS DATA (LAX-STYLE ASSOCIATIVE MEMORY)
+const wordplayCards = [
+  {cat:"Mod 18 • Inputs & Outputs", term:"Immigration vs. Emigration", hook:"<b>I</b>mmigration = <b>I</b>N (+). <b>E</b>migration = <b>E</b>XIT (-).", mean:"People/animals moving IN add to the population; moving OUT (Exit) subtract from it."},
+  {cat:"Mod 18 • Hierarchy", term:"Population vs. Community", hook:"<b>POP</b>ulation = <b>ONE</b> soda pop flavor (1 species). <b>COM</b>munity = <b>COM</b>bo pack (ALL species together).", mean:"Population = 1 species in one area. Community = all interacting species in that area."},
+  {cat:"Mod 18 • Spacing", term:"Clumped / Uniform / Random", hook:"<b>CLU</b>mped = <b>CLU</b>b /Clique (herds/fish). <b>UNI</b>form = <b>UNI</b>form soldiers lined up (penguins). <b>RAN</b>dom = <b>RAN</b>dom wind (dandelions).", mean:"The 3 spatial distributions of how individuals are spaced out."},
+  {cat:"Mod 18 • Growth Limiters", term:"Density-DEPENDENT Factor", hook:"<b>D</b>ependent = <b>D</b>isease, <b>D</b>inner (food), &amp; <b>D</b>ense crowds!", mean:"Depends on how crowded it is: food, water, nest sites, disease, parasites, predators."},
+  {cat:"Mod 18 • Growth Limiters", term:"Density-INDEPENDENT Factor", hook:"<b>I</b>ndependent = <b>I</b>ce storm, <b>I</b>nferno (wildfire), hurricane! Doesn't care how crowded you are.", mean:"Weather &amp; natural disasters kill the same % whether there are 10 bugs or 10,000 bugs."},
+  {cat:"Mod 18 • Ceiling", term:"Carrying Capacity (K)", hook:"<b>K</b> = The <b>K</b>ing's <b>K</b>ap (Ceiling)! The max crowd the castle's food can feed.", mean:"Maximum population size (N) an environment's limiting resources can sustainably support."},
+  {cat:"Mod 18 • Plant Food", term:"Plant Limiting Resources (N & P)", hook:"Plants need <b>SUN, WATER</b>, and <b>N-P</b> (<b>N</b>ature's <b>P</b>ower = <b>N</b>itrogen &amp; <b>P</b>hosphorus).", mean:"Terrestrial plants are limited by water, sunlight, Nitrogen, and Phosphorus."},
+  {cat:"Mod 19 • Speed Limit", term:"Intrinsic Growth Rate (r)", hook:"Little <b>r</b> = <b>r</b>acecar speed when the road is wide open (unlimited resources).", mean:"Maximum potential growth rate of a population under ideal, unlimited conditions."},
+  {cat:"Mod 19 • Curves", term:"J-Curve (Exponential Growth)", hook:"<b>J</b> = <b>J</b>et taking off straight into the sky! (No ceiling, unlimited food).", mean:"Exponential growth curve when resources are unlimited."},
+  {cat:"Mod 19 • Curves", term:"S-Curve (Logistic Growth)", hook:"<b>S</b> = <b>S</b>lows down and <b>S</b>tops at the ceiling (<b>K</b>)!", mean:"Logistic growth: starts fast, then slows down and flattens out as it hits Carrying Capacity (K)."},
+  {cat:"Mod 19 • Crash", term:"Overshoot & Die-Off", hook:"<b>OVER</b>shoot = <b>OVER</b>ate the pantry! <b>DIE-OFF</b> = Starvation crash right after.", mean:"Population shoots past K because of baby time-lag, eats all the food, and crashes (die-off)."},
+  {cat:"Mod 19 • Species Types", term:"K-Selected Species", hook:"<b>K</b> = <b>K</b>ing-sized animals (Elephants, Whales, Humans) who <b>K</b>are for a few babies near ceiling <b>K</b>.", mean:"Large, slow-growing, few offspring, high parental care, stays near K, Type I curve."},
+  {cat:"Mod 19 • Species Types", term:"r-Selected Species", hook:"<b>r</b> = <b>r</b>apid <b>r</b>abbits, <b>r</b>ats, <b>r</b>oaches &amp; weeds! Thousands of babies, zero care.", mean:"Small, fast-reproducing, thousands of tiny offspring, no parental care, survives sudden change best!"},
+  {cat:"Mod 19 • Survivorship", term:"Type I, Type II, Type III Curves", hook:"<b>I</b> = <b>I</b> live to <b>100</b> (Humans/Elephants). <b>II</b> = <b>50/50</b> line (Birds). <b>III</b> = <b>3</b> seconds to live—babies eaten early (Oysters/Bugs)!", mean:"Type I = late loss (K-selected); Type II = constant loss; Type III = early loss (r-selected)."},
+  {cat:"Mod 19 • Cycles", term:"Predator-Prey Wave (Wolves & Moose)", hook:"<b>Prey</b> leads the parade; <b>Predator</b> chases right behind on a delay!", mean:"Prey peaks first → Predators eat well and peak second → Prey gets eaten &amp; drops → Predators starve &amp; drop."},
+  {cat:"Mod 19 • Genetics", term:"Metapopulation & Habitat Corridor", hook:"<b>META</b> = <b>M</b>any patches connected by a <b>CORRIDOR</b> (hallway) so cousins don't marry (<b>Inbreeding Depression</b>)!", mean:"Corridors link separated habitat islands so animals can mix genes and avoid inbreeding depression."}
+];
+
+const wpContainer = document.getElementById("wp-container");
+wordplayCards.forEach(c => {
+  const el = document.createElement("div");
+  el.className = "wp-card";
+  el.onclick = () => el.classList.remove("masked");
+  el.innerHTML = `
+    <div class="wp-cat">${c.cat}</div>
+    <div class="wp-term">${c.term}</div>
+    <div class="wp-hook"><span class="wp-hook-text">💡 ${c.hook}</span></div>
+    <div class="wp-meaning">${c.mean}</div>
+  `;
+  wpContainer.appendChild(el);
+});
+
+let isMasked = false;
+function toggleMask() {
+  isMasked = !isMasked;
+  document.querySelectorAll(".wp-card").forEach(c => {
+    if (isMasked) c.classList.add("masked");
+    else c.classList.remove("masked");
+  });
+  document.getElementById("mask-btn").innerText = isMasked ? "Show All Answers" : "Test Mode: Blur Answers";
+}
+
+// 2. BRAIN-DUMP GRADER DATA
+const bdTopics = [
+  {
+    title: "Brain Dump 1: Population Bathtub & Spacing (Mod 18)",
+    q: "Without looking at notes, type everything you remember about: (1) Population vs. Community, (2) the 2 Inputs (+) and 2 Outputs (-) that change population size, and (3) the 3 ways populations are spaced out.",
+    keywords: [
+      {label:"Same species (Population)", match:["same species","one species","1 species"]},
+      {label:"All species (Community)", match:["all species","different species","interacting","combo"]},
+      {label:"+ Births", match:["birth","births","natality","born"]},
+      {label:"+ Immigration (IN)", match:["immigrat","in"]},
+      {label:"- Deaths", match:["death","deaths","mortality","die"]},
+      {label:"- Emigration (EXIT)", match:["emigrat","exit","out"]},
+      {label:"Clumped (Herds/Schools)", match:["clump","herd","school"]},
+      {label:"Uniform (Penguins/Territory)", match:["uniform","penguin","territor","even"]},
+      {label:"Random (Dandelions/Wind)", match:["random","dandelion","wind","seed"]}
+    ],
+    model: "<b>Full Brain-Dump Target:</b> A <b>population</b> is 1 species in an area; a <b>community</b> is all interacting species. The 2 inputs (+) are <b>Births</b> and <b>Immigration (In)</b>; the 2 outputs (-) are <b>Deaths</b> and <b>Emigration (Exit)</b>. The 3 distributions are <b>Clumped</b> (herds/fish), <b>Uniform</b> (territorial penguins), and <b>Random</b> (dandelions)."
+  },
+  {
+    title: "Brain Dump 2: Density Factors & Carrying Capacity (Mod 18)",
+    q: "Type everything you remember about: (1) Density-Dependent vs. Density-Independent factors (with examples!), (2) Limiting resources for plants vs. animals, and (3) Carrying Capacity (K).",
+    keywords: [
+      {label:"Density-Dependent (Crowding)", match:["dependent","crowd","dense"]},
+      {label:"Food / Disease / Predation", match:["food","disease","parasite","predat","dinner"]},
+      {label:"Density-Independent (Any size)", match:["independent"]},
+      {label:"Weather / Wildfire / Freeze / Tornado", match:["weather","fire","wildfire","freeze","tornado","hurricane","storm","drought","flood"]},
+      {label:"Plants: Water, Sun, Nitrogen & Phosphorus", match:["nitrogen","phosphorus","sun","nutrient"]},
+      {label:"Animals: Food, Water, Nest sites", match:["nest","shelter"]},
+      {label:"Carrying Capacity (K = Ceiling/Max)", match:["carrying capacity","ceiling","max","limit","k"]}
+    ],
+    model: "<b>Full Brain-Dump Target:</b> <b>Density-Dependent</b> factors get worse when crowded (<b>Dinner/Food, Disease, Predation</b>). <b>Density-Independent</b> factors hit any population size equally (<b>Ice storms, Infernos/wildfires, hurricanes, tornadoes</b>). Plants need water, sun, <b>Nitrogen &amp; Phosphorus</b>. Limiting resources set the ceiling called <b>Carrying Capacity (K)</b>."
+  },
+  {
+    title: "Brain Dump 3: J-Curve, S-Curve, Overshoot & Die-Off (Mod 19)",
+    q: "Type everything you remember about: (1) Intrinsic growth rate (r), (2) J-curve (Exponential) vs. S-curve (Logistic), and (3) why populations Overshoot K and have a Die-Off instead of staying flat.",
+    keywords: [
+      {label:"Intrinsic growth rate (r = max speed)", match:["intrinsic","max","ideal","unlimited","racecar"]},
+      {label:"Exponential = J-Curve", match:["exponential","j-curve","j curve","jet"]},
+      {label:"Logistic = S-Curve (Slows at K)", match:["logistic","s-curve","s curve","slow","flatten"]},
+      {label:"Overshoot (Exceeds K)", match:["overshoot","exceed","past k","above k"]},
+      {label:"Reproductive Time Lag (Pregnant before food ran out)", match:["lag","delay","pregnant","babies","time"]},
+      {label:"Die-Off (Starvation crash)", match:["die-off","die off","crash","starv"]}
+    ],
+    model: "<b>Full Brain-Dump Target:</b> <b>Exponential growth</b> makes a <b>J-curve</b> when resources are unlimited at max rate <b>r</b>. <b>Logistic growth</b> makes an <b>S-curve</b> that slows down at <b>Carrying Capacity (K)</b>. Real populations <b>Overshoot</b> K because of a reproductive <b>time lag</b>, run out of food, and suffer a <b>Die-off</b> crash, oscillating around K."
+  },
+  {
+    title: "Brain Dump 4: K-Selected vs. r-Selected & Survivorship Curves (Mod 19)",
+    q: "Type everything you remember about: (1) K-selected vs. r-selected traits & examples, (2) which one survives sudden environmental change better, and (3) Type I, Type II, and Type III survivorship curves.",
+    keywords: [
+      {label:"K-Selected (Large, few babies, high care)", match:["k-selected","k selected","elephant","whale","human","care","few"]},
+      {label:"r-Selected (Small, thousands of babies, no care)", match:["r-selected","r selected","roach","rat","rabbit","weed","dandelion","many","thousand"]},
+      {label:"r-Selected survives environmental change best!", match:["change","adapt","fast","disturb"]},
+      {label:"Type I Curve (Late loss / K-selected)", match:["type i","type 1","old age","late"]},
+      {label:"Type II Curve (Constant loss / Birds & Squirrels)", match:["type ii","type 2","constant","bird","squirrel"]},
+      {label:"Type III Curve (Early loss / Oysters, Bugs, Trees)", match:["type iii","type 3","early","oyster","mosquito","turtle"]}
+    ],
+    model: "<b>Full Brain-Dump Target:</b> <b>K-selected</b> = King-sized (elephants, humans), few babies, high parental care, <b>Type I</b> curve (live to old age). <b>r-selected</b> = rapid (rats, bugs, weeds), thousands of babies, no care, <b>Type III</b> curve (die young), and <b>best at surviving sudden environmental change</b>! <b>Type II</b> = constant loss at all ages (songbirds, squirrels)."
+  },
+  {
+    title: "Brain Dump 5: Predator-Prey, Metapopulations & Corridors (Mod 19)",
+    q: "Type everything you remember about: (1) Wolves & Moose (Predator-Prey cycles), (2) Metapopulations, (3) Habitat Corridors, and (4) Inbreeding Depression.",
+    keywords: [
+      {label:"Prey peaks first, Predator lags behind", match:["prey","predator","wolf","wolves","moose","hare","lynx","lag","chase","behind"]},
+      {label:"Metapopulation (Separate connected patches)", match:["meta","patch","island","separate","connected"]},
+      {label:"Habitat Corridor (Bridge/Hallway between patches)", match:["corridor","bridge","hallway","connect","move"]},
+      {label:"Genetic Diversity / Gene Flow", match:["gene","genetic","diversity"]},
+      {label:"Inbreeding Depression (Mating with relatives hurts survival)", match:["inbreed","depression","relative","cousin"]}
+    ],
+    model: "<b>Full Brain-Dump Target:</b> In <b>Predator-Prey cycles</b>, prey rises first, predators rise second, predators eat too many prey so prey crashes, and predators starve and crash after. A <b>Metapopulation</b> is separate patches linked by <b>Habitat Corridors</b> (bridges) that allow gene flow and prevent <b>Inbreeding Depression</b>."
+  }
+];
+
+let curBd = 0;
+const bdTopicsDiv = document.getElementById("bd-topics");
+bdTopics.forEach((t, i) => {
+  const b = document.createElement("button");
+  b.className = "bd-topic-btn" + (i===0?" active":"");
+  b.innerText = t.title;
+  b.onclick = () => selectBd(i, b);
+  bdTopicsDiv.appendChild(b);
+});
+
+function selectBd(i, btn) {
+  curBd = i;
+  document.querySelectorAll(".bd-topic-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("bd-title").innerText = bdTopics[i].title;
+  document.getElementById("bd-question").innerText = bdTopics[i].q;
+  document.getElementById("bd-textarea").value = "";
+  document.getElementById("bd-result").innerText = "";
+  document.getElementById("bd-model").style.display = "none";
+  renderChips(false);
+}
+
+function renderChips(graded, text="") {
+  const wrap = document.getElementById("bd-chips");
+  wrap.innerHTML = "";
+  const lower = text.toLowerCase();
+  let hits = 0;
+  bdTopics[curBd].keywords.forEach(k => {
+    const matched = graded && k.match.some(m => lower.includes(m));
+    if (matched) hits++;
+    const span = document.createElement("span");
+    span.className = "kw-chip" + (graded ? (matched ? " hit" : " miss") : "");
+    span.innerText = (graded ? (matched ? "✓ " : "✗ Missed: ") : "• ") + k.label;
+    wrap.appendChild(span);
+  });
+  if (graded) {
+    const total = bdTopics[curBd].keywords.length;
+    document.getElementById("bd-result").innerHTML = `Brain-Dump Score: <span style="color:var(--emerald)">${hits} / ${total} Core Concepts Hit!</span> (Type the red missed ones into your box and click Grade again!)`;
+  }
+}
+
+function gradeBrainDump() {
+  const txt = document.getElementById("bd-textarea").value;
+  renderChips(true, txt);
+}
+
+function showAllKeywords() {
+  const m = document.getElementById("bd-model");
+  m.style.display = "block";
+  m.innerHTML = bdTopics[curBd].model;
+}
+
+function clearBrainDump() {
+  document.getElementById("bd-textarea").value = "";
+  document.getElementById("bd-result").innerText = "";
+  document.getElementById("bd-model").style.display = "none";
+  renderChips(false);
+}
+selectBd(0, bdTopicsDiv.children[0]);
+
+// 3. 20-QUESTION QUIZ WITH WORDPLAY HINTS
+const questions = [
+  {q:"1. Which two processes are the INPUTS (+) that increase a population's size (N)?", opts:["Births and Emigration","Births and Immigration","Deaths and Immigration","Deaths and Emigration"], a:1, hint:"Wordplay: <b>I</b>mmigration = <b>I</b>N (+). <b>E</b>migration = <b>E</b>XIT (-).", exp:"Births and Immigration (moving IN) add individuals to a population."},
+  {q:"2. A forest fire burns through a canyon, killing 75% of the mice regardless of whether the mouse population was sparse or super crowded. The fire is a:", opts:["Density-dependent factor","Density-independent factor","Logistic factor","Metapopulation corridor"], a:1, hint:"Wordplay: <b>I</b>ndependent = <b>I</b>nferno (wildfire) / <b>I</b>ce storm! Doesn't care how crowded it is.", exp:"Wildfires and weather events act independently of population density."},
+  {q:"3. Which of the following is a DENSITY-DEPENDENT factor that limits population growth?", opts:["A hurricane","A volcanic eruption","Spread of a contagious flu virus in a crowded herd","An early autumn frost"], a:2, hint:"Wordplay: <b>D</b>ependent = <b>D</b>isease &amp; <b>D</b>inner in a <b>D</b>ense crowd!", exp:"Disease spreads much faster when individuals are crowded closely together."},
+  {q:"4. Territorial gannet seabirds space their nests out so every bird is just out of pecking reach of its neighbors. What distribution is this?", opts:["Random","Clumped","Uniform","Exponential"], a:2, hint:"Wordplay: <b>UNI</b>form = Soldiers lined up in <b>UNI</b>form with even spacing!", exp:"Territorial defense creates an evenly spaced Uniform distribution."},
+  {q:"5. Dandelion seeds blown by the wind land wherever they happen to fall in a meadow. What distribution pattern does this produce?", opts:["Random","Uniform","Clumped","Type I"], a:0, hint:"Wordplay: <b>RAN</b>dom = <b>RAN</b>dom wind blowing seeds anywhere.", exp:"Wind-dispersed seeds in a uniform meadow create a Random distribution."},
+  {q:"6. What letter represents an environment's Carrying Capacity?", opts:["r","N","K","J"], a:2, hint:"Wordplay: <b>K</b> = The <b>K</b>ing's <b>K</b>ap (the ceiling)!", exp:"K represents Carrying Capacity; N is Population Size; r is Intrinsic Growth Rate."},
+  {q:"7. What happens to a population's growth rate in the Logistic Growth Model (S-curve) as the population size gets very close to K?", opts:["It speeds up to infinity","It slows down toward zero","It turns into a J-curve","All individuals emigrate"], a:1, hint:"Wordplay: <b>S</b>-Curve = <b>S</b>lows down and <b>S</b>tops at the ceiling (K)!", exp:"As resources become scarce near K, growth decelerates and levels off at 0."},
+  {q:"8. Why do real populations often OVERSHOOT carrying capacity (K) before experiencing a die-off?", opts:["Because weather never changes","Because of a reproductive time lag (pregnant individuals give birth after food runs low)","Because K-selected species lay 10,000 eggs","Because corridors block food"], a:1, hint:"Wordplay: <b>OVER</b>shoot = <b>OVER</b>ate the pantry because babies already on the way were born after food ran low!", exp:"There is a delay (lag) between when resources start running low and when birth rates drop."},
+  {q:"9. Which organism is a classic example of an r-selected species with a Type III survivorship curve?", opts:["African elephant","Human","Oyster or dandelion releasing thousands of tiny offspring with no parental care","Blue whale"], a:2, hint:"Wordplay: <b>r</b> = <b>r</b>apid weeds/bugs/oysters! <b>Type III</b> = 3 seconds to live (most die young).", exp:"Oysters and dandelions produce thousands of offspring with high early mortality (Type III)."},
+  {q:"10. Which organism is a classic K-selected species with a Type I survivorship curve?", opts:["Mosquito","Dandelion","Elephant (large body, few calves, years of maternal care)","Housefly"], a:2, hint:"Wordplay: <b>K</b> = <b>K</b>ing-sized Elephant that <b>K</b>ares for its baby and lives to <b>100 (Type I)</b>!", exp:"Elephants, whales, and humans are K-selected with Type I survivorship."},
+  {q:"11. If rapid climate change or a sudden disturbance alters a habitat, which species type is BETTER able to survive and adapt?", opts:["K-selected species","r-selected species","Species with inbreeding depression","Only Type I species"], a:1, hint:"Wordplay: <b>r</b>-selected = <b>r</b>apid generation time &amp; thousands of offspring = fast adaptation!", exp:"Because r-selected species reproduce rapidly in huge numbers, they adapt and colonize disturbed areas much faster."},
+  {q:"12. Songbirds and squirrels have roughly an equal chance of dying at any age (young, middle-aged, or old). Which survivorship curve is this?", opts:["Type I","Type II","Type III","J-Curve"], a:1, hint:"Wordplay: <b>Type II</b> = <b>50/50</b> straight diagonal line at every age!", exp:"Type II survivorship shows a constant mortality rate throughout life."},
+  {q:"13. In the abandoned New England farmland story (Module 18), why did goldenrod wildflowers eventually disappear from the fields?", opts:["A volcano erupted","Tall white pine trees grew up and shaded them out (community competition for sunlight)","Goldenrod is a K-selected mammal","Farmers sprayed herbicide"], a:1, hint:"Remember the timeline: Bare farm → Goldenrod weeds → White Pines shade them out → Broadleaf Oaks!", exp:"Taller trees blocked sunlight, showing why community-level interactions matter."},
+  {q:"14. What are the two most common limiting soil nutrients for terrestrial plants (Module 18, Q8)?", opts:["Gold and Silver","Nitrogen (N) and Phosphorus (P)","Helium and Neon","Salt and Sugar"], a:1, hint:"Wordplay: <b>N-P</b> = <b>N</b>ature's <b>P</b>ower (<b>N</b>itrogen &amp; <b>P</b>hosphorus)!", exp:"Water, sunlight, Nitrogen, and Phosphorus are key limiting resources for land plants."},
+  {q:"15. On Isle Royale, when the moose (prey) population spikes to a high peak, what happens next to the wolf (predator) population?", opts:["Wolves immediately go extinct","The wolf population increases shortly afterward because wolves have plenty of moose to eat","Moose start eating wolves","Both lines stay flat"], a:1, hint:"Wordplay: <b>Prey</b> leads the parade; <b>Predator</b> chases right behind!", exp:"Abundant prey allows predators to survive and raise more offspring, so the predator peak follows the prey peak."},
+  {q:"16. What is a 'metapopulation'?", opts:["A single giant herd with no barriers","A group of spatially separate populations connected by occasional movement of individuals between them","A population that went extinct","Only bacteria in a lab"], a:1, hint:"Wordplay: <b>META</b> = <b>M</b>any separate habitat patches linked by occasional travelers!", exp:"Metapopulations consist of distinct subpopulations connected by migration across habitat patches."},
+  {q:"17. How do wildlife 'corridors' (like green bridges over freeways) help isolated populations?", opts:["They trap animals in one patch","They allow gene flow between patches and prevent inbreeding depression","They increase car collisions","They turn Type I species into Type III"], a:1, hint:"Wordplay: A <b>CORRIDOR</b> is a hallway between patches so cousins don't marry (<b>Inbreeding Depression</b>)!", exp:"Corridors connect isolated patches, boosting genetic diversity and preventing inbreeding depression."},
+  {q:"18. What is 'inbreeding depression'?", opts:["When animals get sad in winter","When close relatives in a small isolated population mate and produce offspring with lower survival and reproduction","When a population overshoots K","When predators eat all the prey"], a:1, hint:"Small isolated patch → relatives mate → harmful recessive traits reduce offspring survival.", exp:"Mating between genetically similar relatives impairs offspring health and survival."},
+  {q:"19. A population of 200 rabbits has 50 births, 20 deaths, 10 immigrants, and 5 emigrants this year. What is the new population size?", opts:["225","235","250","165"], a:1, hint:"Bathtub math: Start (200) + Births (50) + IN (10) - Deaths (20) - EXIT (5).", exp:"200 + (50 + 10) - (20 + 5) = 200 + 60 - 25 = 235."},
+  {q:"20. Why have white-tailed deer become overabundant in many suburban U.S. neighborhoods (Module 19, Q9)?", opts:["Humans eliminated top predators (wolves/cougars) and created edge habitats with abundant garden/crop food","Deer switched to a Type III curve","Suburbs have too many wolves","Wildfires killed all the trees"], a:0, hint:"No wolves + lots of suburban shrubs/gardens = deer population boom!", exp:"Removing predators and creating fragmented edge habitats causes deer overabundance."}
+];
+
+let score = 0;
+const answered = new Set();
+const qList = document.getElementById("quiz-list");
+
+function buildQuiz() {
+  qList.innerHTML = "";
+  questions.forEach((item, idx) => {
+    const c = document.createElement("div");
+    c.className = "q-card";
+    const opts = item.opts.map((o, oIdx) => `
+      <button class="q-opt" onclick="pickAns(${idx}, ${oIdx}, ${item.a}, this)">${String.fromCharCode(65+oIdx)}. ${o}</button>
+    `).join("");
+    c.innerHTML = `
+      <div class="q-title">${item.q}</div>
+      <div>${opts}</div>
+      <button class="hint-btn" onclick="document.getElementById('hint-${idx}').style.display='block'">Show Wordplay Hint 💡</button>
+      <div class="hint-box" id="hint-${idx}">${item.hint}</div>
+      <div class="ans-box" id="ans-${idx}"></div>
+    `;
+    qList.appendChild(c);
+  });
+}
+
+function pickAns(qIdx, chosen, correct, btn) {
+  const ansBox = document.getElementById("ans-" + qIdx);
+  ansBox.style.display = "block";
+  if (chosen === correct) {
+    btn.style.borderColor = "#10b981";
+    btn.style.background = "rgba(16,185,129,0.22)";
+    ansBox.style.background = "rgba(16,185,129,0.12)";
+    ansBox.style.color = "#6ee7b7";
+    ansBox.innerHTML = "✓ Spot on! " + questions[qIdx].exp;
+    if (!answered.has(qIdx)) {
+      answered.add(qIdx);
+      score++;
+      document.getElementById("live-score").innerText = `Quiz Score: ${score} / 20`;
+    }
+  } else {
+    btn.style.borderColor = "#f43f5e";
+    btn.style.background = "rgba(244,63,94,0.2)";
+    ansBox.style.background = "rgba(244,63,94,0.12)";
+    ansBox.style.color = "#fda4af";
+    ansBox.innerHTML = "✗ Try again! Click 'Show Wordplay Hint 💡' above if you want the memory trick.";
+  }
+}
+
+function resetQuiz() {
+  score = 0;
+  answered.clear();
+  document.getElementById("live-score").innerText = "Quiz Score: 0 / 20";
+  buildQuiz();
+}
+buildQuiz();
+
+// 4. PACKET SUMMARY
+const packetQ = [
+  ["Mod 18, Q1 (New England Farm)", "Abandoned farm → weeds/goldenrod (r-selected) → white pines shade out goldenrod → broadleaf oaks/maples. Shows species interactions drive community change."],
+  ["Mod 18, Q2 (Population vs Community)", "Population = 1 species in a given area at one time. Community = ALL interacting species in that area."],
+  ["Mod 18, Q3 (Why Community Level Matters)", "You can't explain why goldenrod declined without seeing how pine trees shaded it and insects ate it."],
+  ["Mod 18, Q4 (System Inputs & Outputs)", "Inputs (+): Births, Immigration (IN). Outputs (-): Deaths, Emigration (EXIT)."],
+  ["Mod 18, Q5 (Sex Ratio & Age Structure)", "Mia's answer is 100% right! Predicts future birth numbers and how fast the population will grow."],
+  ["Mod 18, Q6 (How High Density Limits Growth)", "Crowding causes competition for food/space, waste buildup, and fast spread of disease/parasites."],
+  ["Mod 18, Q7 (UPGRADE THIS ONE ON WORKSHEET)", "Density-Dependent = depends on crowding (food, disease, predation). Density-Independent = hits any size equally (tornado, wildfire, freeze)."],
+  ["Mod 18, Q8 (Plant vs Animal Limiting Resources)", "Mia's answer is 100% right! Plants: water, sun, Nitrogen & Phosphorus. Animals: food, water, nest sites."],
+  ["Mod 18, Q9 (Limiting Factors & Carrying Capacity K)", "The scarcest limiting resource sets the maximum ceiling (Carrying Capacity K)."],
+  ["Mod 19, Q1 (Intrinsic Growth Rate r)", "Maximum potential growth rate under ideal, unlimited conditions (high in r-selected, low in K-selected)."],
+  ["Mod 19, Q2 (Approaching K in Logistic Growth)", "Growth slows down (decelerates) until it levels off near zero at K (forming the S-curve)."],
+  ["Mod 19, Q3 (Exceeding K Short vs Long Term)", "Short term: YES (Overshoot due to pregnancy time lag). Long term: NO (food runs out, causing a Die-off crash)."],
+  ["Mod 19, Q4 (Why Fig 19.4 Oscillates Around K)", "Time delays between resource depletion and birth/death rates cause overshoot → die-off → rebound oscillations."],
+  ["Mod 19, Q5 (Predator-Prey Cycles Fig 19.5)", "Prey rises → Predator rises with a lag → Prey gets eaten & drops → Predators starve & drop → cycle repeats."],
+  ["Mod 19, Q6 (Who Survives Change Better: r or K?)", "r-selected species! Fast reproduction + huge offspring numbers = rapid adaptation to change."],
+  ["Mod 19, Q7 (r/K and Survivorship Curves)", "K-selected = Type I curve (high parental care, die old). r-selected = Type III curve (no care, most die young)."],
+  ["Mod 19, Q8 (Metapopulations)", "Separate subpopulations linked by occasional movement across corridors; prevents inbreeding depression and local extinction."],
+  ["Mod 19, Q9 & Q10 (Overabundant Species & Control)", "Removing wolves + suburban gardens = too many deer/geese. Rural control = hunting/predators; Urban/wealthy control = fertility contraception, barriers, trap/relocate."]
+];
+const pList = document.getElementById("packet-list");
+packetQ.forEach(([q, a]) => {
+  const d = document.createElement("div");
+  d.className = "q-card";
+  d.innerHTML = `<div class="q-title" style="color:var(--sky)">${q}</div><div style="font-size:14px;color:#e2e8f0;">${a}</div>`;
+  pList.appendChild(d);
+});
+
+function switchTab(id, btn) {
+  document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-tabs .tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+}
+</script>
+</body>
+</html>
